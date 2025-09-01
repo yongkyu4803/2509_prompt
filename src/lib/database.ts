@@ -1,17 +1,12 @@
 import { supabase } from './supabase';
 import { Prompt, PromptCategory } from './types';
-import { generateId } from './utils';
 
 // 익명 사용자 ID 생성 및 저장
 function getOrCreateUserId(): string {
-  if (typeof window === 'undefined') return 'server-user';
+  if (typeof window === 'undefined') return 'user-y2r2japwz';
   
-  let userId = localStorage.getItem('supabase-user-id');
-  if (!userId) {
-    userId = `user-${generateId()}`;
-    localStorage.setItem('supabase-user-id', userId);
-  }
-  return userId;
+  // 기존 데이터와 호환성을 위해 기존 사용자 ID 사용
+  return 'user-y2r2japwz';
 }
 
 // 레거시 카테고리 문자열을 UUID 카테고리로 변환 (DB → UI)
