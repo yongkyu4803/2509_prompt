@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { BookOpen, GraduationCap } from 'lucide-react';
+import { BookOpen, GraduationCap, LogIn, LogOut, Crown, Eye } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import LoginModal from '@/components/auth/LoginModal';
 
 interface NavTab {
   id: string;
@@ -32,6 +35,8 @@ const tabs: NavTab[] = [
 
 export default function GlobalNavbar() {
   const pathname = usePathname();
+  const { isAdmin, isLoggedIn, logout } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   // 현재 활성 탭 결정
   const getActiveTab = () => {
@@ -42,6 +47,14 @@ export default function GlobalNavbar() {
   };
 
   const activeTab = getActiveTab();
+
+  const handleAuthAction = () => {
+    if (isLoggedIn) {
+      logout();
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -57,8 +70,44 @@ export default function GlobalNavbar() {
             </div>
           </div>
 
-          {/* 네비게이션 탭 */}
-          <div className="flex items-center">
+          {/* 네비게이션 탭과 권한 표시 */}
+          <div className="flex items-center gap-4">
+            {/* 권한 상태 표시 */}
+            <div className="flex items-center gap-2">
+              <div className={cn(
+                "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium",
+                isAdmin 
+                  ? "bg-purple-100 text-purple-700 border border-purple-200" 
+                  : "bg-gray-100 text-gray-600 border border-gray-200"
+              )}>
+                {isAdmin ? <Crown size={14} /> : <Eye size={14} />}
+                <span>{isAdmin ? '관리자' : '읽기전용'}</span>
+              </div>
+              
+              <button
+                onClick={handleAuthAction}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                  isLoggedIn
+                    ? "text-red-600 hover:bg-red-50"
+                    : "text-purple-600 hover:bg-purple-50"
+                )}
+              >
+                {isLoggedIn ? (
+                  <>
+                    <LogOut size={16} />
+                    <span className="hidden sm:inline">로그아웃</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn size={16} />
+                    <span className="hidden sm:inline">관리자</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* 네비게이션 탭 */}
             <div className="hidden sm:flex bg-gray-100 rounded-lg p-1 gap-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -121,6 +170,12 @@ export default function GlobalNavbar() {
           ))}
         </div>
       </div>
+
+      {/* 로그인 모달 */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </nav>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { PromptProvider } from "@/contexts/PromptContext";
 import { CategoryProvider } from "@/contexts/CategoryContext";
 import GlobalNavbar from "@/components/navigation/GlobalNavbar";
@@ -30,14 +31,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CategoryProvider>
-          <PromptProvider>
-            <GlobalNavbar />
-            <main className="min-h-screen bg-gray-50">
-              {children}
-            </main>
-          </PromptProvider>
-        </CategoryProvider>
+        <AuthProvider>
+          <CategoryProvider>
+            <PromptProvider>
+              <GlobalNavbar />
+              <main className="min-h-screen bg-gray-50">
+                {children}
+              </main>
+            </PromptProvider>
+          </CategoryProvider>
+        </AuthProvider>
       </body>
     </html>
   );
