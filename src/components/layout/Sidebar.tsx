@@ -155,10 +155,10 @@ export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, onCate
               <div className="flex items-center gap-2 text-sm">
                 <Mail className="w-4 h-4 text-gray-400" />
                 <a 
-                  href="mailto:support@prompt-library.com"
+                  href="mailto:gq.newslens@gmail.com"
                   className="text-gray-600 hover:text-purple-600 transition-colors"
                 >
-                  support@prompt-library.com
+                  gq.newslens@gmail.com
                 </a>
               </div>
             </div>
