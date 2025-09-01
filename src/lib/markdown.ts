@@ -17,23 +17,33 @@ function createSlug(text: string): string {
 }
 
 // 제목에 ID를 추가하는 플러그인
+interface MarkdownNode {
+  type: string;
+  children?: MarkdownNode[];
+  value?: string;
+  data?: Record<string, unknown>;
+  properties?: Record<string, unknown>;
+}
+
 function addHeadingIds() {
-  return (tree: any) => {
-    tree.children.forEach((node: any) => {
-      if (node.type === 'heading' && node.children && node.children[0]) {
-        const text = node.children
-          .filter((child: any) => child.type === 'text')
-          .map((child: any) => child.value)
+  return (tree: MarkdownNode) => {
+    if (tree.children) {
+      tree.children.forEach((node: MarkdownNode) => {
+        if (node.type === 'heading' && node.children && node.children[0]) {
+          const text = node.children
+            .filter((child: MarkdownNode) => child.type === 'text')
+            .map((child: MarkdownNode) => child.value)
           .join(' ');
         
-        if (text) {
-          const id = createSlug(text);
-          node.data = node.data || {};
-          node.data.hProperties = node.data.hProperties || {};
-          node.data.hProperties.id = id;
+          if (text) {
+            const id = createSlug(text);
+            node.data = node.data || {};
+            node.data.hProperties = node.data.hProperties || {};
+            (node.data.hProperties as Record<string, string>).id = id;
+          }
         }
-      }
-    });
+      });
+    }
   };
 }
 

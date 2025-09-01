@@ -4,7 +4,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Prompt, PromptCategory, PromptContextType, SortBy } from '@/lib/types';
 import { mockPrompts } from '@/data/mockPrompts';
 import { PromptService, migrateLocalStorageData } from '@/lib/database';
-import { runDatabaseTests } from '@/lib/test-database';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const PromptContext = createContext<PromptContextType | undefined>(undefined);
@@ -59,7 +58,7 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
     }
 
     initializeData();
-  }, []);
+  }, [localStoragePrompts]);
 
   // Filter and sort prompts based on search query, selected category, and sort option
   useEffect(() => {

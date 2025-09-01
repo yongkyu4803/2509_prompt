@@ -1,13 +1,6 @@
 import { notFound } from 'next/navigation';
-import { Chapter } from '@/types/study';
 import { getChapterBySlug, getAdjacentChapters, generateTableOfContents } from '@/lib/markdown';
 import ChapterDetailClient from '@/components/study/ChapterDetailClient';
-import { 
-  Clock, 
-  BookOpen,
-  Home
-} from 'lucide-react';
-import Link from 'next/link';
 
 interface ChapterPageProps {
   params: { slug: string };

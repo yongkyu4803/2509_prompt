@@ -21,7 +21,7 @@ async function checkUserIds() {
     }
 
     // user_id별로 그룹핑
-    const userGroups: { [key: string]: any[] } = {};
+    const userGroups: Record<string, unknown[]> = {};
     prompts.forEach(prompt => {
       if (!userGroups[prompt.user_id]) {
         userGroups[prompt.user_id] = [];

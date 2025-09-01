@@ -2,16 +2,16 @@ import { supabase } from './supabase';
 import { CategoryConfig } from './types';
 
 // 데이터베이스 행을 CategoryConfig로 변환
-function transformRowToCategory(row: any): CategoryConfig {
+function transformRowToCategory(row: Record<string, unknown>): CategoryConfig {
   return {
-    id: row.id,
-    label: row.label,
-    color: row.color,
-    bgColor: row.bg_color,
-    borderColor: row.border_color,
-    isDefault: row.is_default,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    id: row.id as string,
+    label: row.label as string,
+    color: row.color as string,
+    bgColor: row.bg_color as string,
+    borderColor: row.border_color as string,
+    isDefault: row.is_default as boolean,
+    createdAt: row.created_at as string,
+    updatedAt: row.updated_at as string,
   };
 }
 
@@ -28,7 +28,7 @@ function transformCategoryToInsert(category: Omit<CategoryConfig, 'id' | 'create
 
 // CategoryConfig를 데이터베이스 업데이트용으로 변환
 function transformCategoryToUpdate(category: Partial<CategoryConfig>) {
-  const update: any = {};
+  const update: Record<string, unknown> = {};
   if (category.label !== undefined) update.label = category.label;
   if (category.color !== undefined) update.color = category.color;
   if (category.bgColor !== undefined) update.bg_color = category.bgColor;

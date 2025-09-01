@@ -3,10 +3,10 @@ import { getChapterBySlug, getAdjacentChapters } from '@/lib/markdown';
 
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     
     const [chapter, adjacent] = await Promise.all([
       getChapterBySlug(slug),

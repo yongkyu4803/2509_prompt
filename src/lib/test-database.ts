@@ -6,7 +6,7 @@ export async function testDatabaseConnection(): Promise<boolean> {
   try {
     console.log('🔗 Testing Supabase connection...');
     
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('prompts')
       .select('count')
       .limit(1);
@@ -29,7 +29,7 @@ export async function testTableStructure(): Promise<boolean> {
   try {
     console.log('🔍 Testing table structure...');
     
-    const { data, error } = await supabase.rpc('get_table_info', { 
+    const { error } = await supabase.rpc('get_table_info', { 
       table_name: 'prompts' 
     });
     

@@ -11,7 +11,7 @@ async function verifyPrompts() {
     console.log('\n📝 프롬프트 목록:');
     
     // 카테고리별로 분류
-    const promptsByCategory: { [key: string]: any[] } = {};
+    const promptsByCategory: Record<string, unknown[]> = {};
     
     for (const prompt of prompts) {
       const categoryName = getCategoryName(prompt.category);

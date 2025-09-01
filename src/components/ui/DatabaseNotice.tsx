@@ -44,7 +44,7 @@ export default function DatabaseNotice() {
             </summary>
             <div className="mt-2 text-xs text-amber-600 bg-amber-100 p-3 rounded">
               <p className="mb-2">1. 위의 Supabase Dashboard 링크 클릭</p>
-              <p className="mb-2">2. 좌측 메뉴에서 "SQL Editor" 선택</p>
+              <p className="mb-2">2. 좌측 메뉴에서 &quot;SQL Editor&quot; 선택</p>
               <p className="mb-2">3. SUPABASE_SETUP.md 파일의 SQL 코드 실행</p>
               <p>4. 페이지 새로고침 후 정상 작동 확인</p>
             </div>

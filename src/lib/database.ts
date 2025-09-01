@@ -1,7 +1,6 @@
 import { supabase } from './supabase';
 import { Prompt, PromptCategory } from './types';
 import { generateId } from './utils';
-import { LEGACY_CATEGORY_CONFIG } from './constants';
 
 // 익명 사용자 ID 생성 및 저장
 function getOrCreateUserId(): string {
@@ -169,7 +168,7 @@ async function transformSupabaseToFrontend(supabasePrompt: SupabasePrompt): Prom
 
 // 프론트엔드 데이터를 Supabase 타입으로 변환 (비동기)
 async function transformFrontendToSupabase(prompt: Partial<Prompt>) {
-  const result: any = {};
+  const result: Record<string, unknown> = {};
   
   // 필드별로 명시적으로 처리
   if (prompt.id !== undefined) result.id = prompt.id;

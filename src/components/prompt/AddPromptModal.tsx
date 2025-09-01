@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, Plus } from 'lucide-react';
 import { PromptCategory } from '@/lib/types';
 import { createCategoryOptions, DEFAULT_CATEGORY_OPTIONS } from '@/lib/constants';
@@ -44,7 +44,7 @@ export default function AddPromptModal({
     : DEFAULT_CATEGORY_OPTIONS.filter(opt => opt.value !== 'all');
 
   // 기본 폼 데이터 생성 함수
-  const getDefaultFormData = () => ({
+  const getDefaultFormData = useCallback(() => ({
     title: '',
     description: '',
     content: '',
@@ -52,10 +52,10 @@ export default function AddPromptModal({
     tags: [],
     usageHours: 0,
     isFavorite: false,
-  });
+  }), [categoryOptions]);
 
   // 편집 데이터에서 폼 데이터 생성 함수
-  const getFormDataFromInitial = (data: typeof initialData) => {
+  const getFormDataFromInitial = useCallback((data: typeof initialData) => {
     if (!data) return getDefaultFormData();
     
     return {
@@ -67,7 +67,7 @@ export default function AddPromptModal({
       usageHours: data.usageHours || 0,
       isFavorite: data.isFavorite || false,
     };
-  };
+  }, [categoryOptions, getDefaultFormData]);
 
   const [formData, setFormData] = useState(() => getFormDataFromInitial(initialData));
   const [tagInput, setTagInput] = useState('');
@@ -81,7 +81,7 @@ export default function AddPromptModal({
       setTagInput('');
       setErrors({});
     }
-  }, [isOpen, initialData]);
+  }, [isOpen, initialData, getFormDataFromInitial]);
 
   // 폼 데이터 변경 여부 확인
   const hasChanges = () => {

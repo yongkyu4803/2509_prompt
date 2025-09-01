@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { UserRole, UserPermissions, getUserRole, getUserPermissions, hasPermission, ROLE_DISPLAY } from '@/lib/auth';
+import { UserRole, UserPermissions, getUserRole, getUserPermissions, ROLE_DISPLAY } from '@/lib/auth';
 
 export function usePermissions() {
   const [role, setRole] = useState<UserRole>('viewer');

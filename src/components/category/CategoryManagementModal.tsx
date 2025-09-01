@@ -129,8 +129,8 @@ export default function CategoryManagementModal({ isOpen, onClose }: CategoryMan
     if (confirm(`"${category.label}" 카테고리를 삭제하시겠습니까?`)) {
       try {
         await deleteCategory(category.id);
-      } catch (error: any) {
-        alert(error.message || '카테고리 삭제에 실패했습니다.');
+      } catch (error: unknown) {
+        alert((error instanceof Error ? error.message : '카테고리 삭제에 실패했습니다.'));
       }
     }
   };
