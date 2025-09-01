@@ -5,6 +5,7 @@ import { BookOpen, Plus, Star, Menu, X, Settings, Mail, User } from 'lucide-reac
 import { cn } from '@/lib/utils';
 import { PermissionGuard } from '@/components/auth/PermissionGuard';
 import { RoleDisplay } from '@/components/ui/ReadOnlyBadge';
+import Link from 'next/link';
 
 interface SidebarProps {
   activeMenu: string;
@@ -57,7 +58,7 @@ export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, onCate
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex flex-col gap-3 p-6 border-b border-gray-200">
-            <div className="flex items-center gap-3">
+            <Link href="/library" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
                 <BookOpen className="text-white" size={20} />
               </div>
@@ -65,7 +66,7 @@ export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, onCate
                 <h1 className="text-lg font-bold text-gray-900">프롬프트 라이브러리</h1>
                 <p className="text-sm text-gray-500">나만의 프롬프트 모음</p>
               </div>
-            </div>
+            </Link>
             
             {/* Role Display - 데스크톱에서만 표시 */}
             <div className="hidden lg:block">
