@@ -36,31 +36,35 @@ export default function Layout({
   children,
 }: LayoutProps) {
   return (
-    <div className="flex h-screen">
-      <Sidebar 
-        activeMenu={activeMenu} 
-        onMenuChange={onMenuChange} 
-        totalPrompts={totalPrompts}
-        onCategoryManagementOpen={onCategoryManagementOpen}
-      />
-      
-      <div className="flex-1 flex flex-col lg:ml-0">
-        <Header
-          searchQuery={searchQuery}
-          selectedCategory={selectedCategory}
-          viewMode={viewMode}
-          sortBy={sortBy}
-          onSearchChange={onSearchChange}
-          onCategoryChange={onCategoryChange}
-          onViewModeChange={onViewModeChange}
-          onSortChange={onSortChange}
-        />
-        
-        <main className="flex-1 overflow-auto bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-7xl mx-auto bg-white shadow-lg min-h-screen">
+        <div className="flex h-screen">
+          <Sidebar 
+            activeMenu={activeMenu} 
+            onMenuChange={onMenuChange} 
+            totalPrompts={totalPrompts}
+            onCategoryManagementOpen={onCategoryManagementOpen}
+          />
+          
+          <div className="flex-1 flex flex-col lg:ml-0">
+            <Header
+              searchQuery={searchQuery}
+              selectedCategory={selectedCategory}
+              viewMode={viewMode}
+              sortBy={sortBy}
+              onSearchChange={onSearchChange}
+              onCategoryChange={onCategoryChange}
+              onViewModeChange={onViewModeChange}
+              onSortChange={onSortChange}
+            />
+            
+            <main className="flex-1 overflow-auto bg-gray-50">
+              <div className="px-4 sm:px-6 lg:px-8 py-8">
+                {children}
+              </div>
+            </main>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );
