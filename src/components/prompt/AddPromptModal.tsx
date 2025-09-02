@@ -6,6 +6,7 @@ import { PromptCategory } from '@/lib/types';
 import { createCategoryOptions, DEFAULT_CATEGORY_OPTIONS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { useCategories } from '@/contexts/CategoryContext';
+import { usePermissions } from '@/hooks/usePermissions';
 
 interface AddPromptModalProps {
   isOpen: boolean;
@@ -37,6 +38,11 @@ export default function AddPromptModal({
   initialData,
 }: AddPromptModalProps) {
   const { categories } = useCategories();
+  const { hasPermission } = usePermissions();
+  
+  // 권한 체크
+  const canUpdate = hasPermission('canUpdate');
+  const isReadOnly = !canUpdate;
   
   // 카테고리 옵션 생성 (로딩 중이면 기본 옵션 사용)
   const categoryOptions = (categories && categories.length > 0) 
@@ -182,9 +188,17 @@ export default function AddPromptModal({
       <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">
-            {initialData ? '프롬프트 수정' : '새 프롬프트 추가'}
-          </h2>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              {initialData ? '프롬프트 수정' : '새 프롬프트 추가'}
+            </h2>
+            {isReadOnly && (
+              <p className="text-sm text-amber-600 mt-1 flex items-center gap-1">
+                <span className="inline-block w-2 h-2 bg-amber-500 rounded-full"></span>
+                읽기 전용 모드 - 수정하려면 관리자로 로그인하세요
+              </p>
+            )}
+          </div>
           <button
             onClick={handleClose}
             className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -205,9 +219,11 @@ export default function AddPromptModal({
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                disabled={isReadOnly}
                 className={cn(
                   'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500',
-                  errors.title ? 'border-red-300' : 'border-gray-300'
+                  errors.title ? 'border-red-300' : 'border-gray-300',
+                  isReadOnly && 'bg-gray-50 cursor-not-allowed'
                 )}
                 placeholder="프롬프트 제목을 입력하세요"
               />
@@ -224,7 +240,11 @@ export default function AddPromptModal({
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value as PromptCategory })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                disabled={isReadOnly}
+                className={cn(
+                  "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500",
+                  isReadOnly && 'bg-gray-50 cursor-not-allowed'
+                )}
               >
                 {categoryOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -242,10 +262,12 @@ export default function AddPromptModal({
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                disabled={isReadOnly}
                 rows={3}
                 className={cn(
                   'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none',
-                  errors.description ? 'border-red-300' : 'border-gray-300'
+                  errors.description ? 'border-red-300' : 'border-gray-300',
+                  isReadOnly && 'bg-gray-50 cursor-not-allowed'
                 )}
                 placeholder="프롬프트에 대한 간단한 설명을 입력하세요"
               />
@@ -262,10 +284,12 @@ export default function AddPromptModal({
               <textarea
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                disabled={isReadOnly}
                 rows={10}
                 className={cn(
                   'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none font-mono text-sm',
-                  errors.content ? 'border-red-300' : 'border-gray-300'
+                  errors.content ? 'border-red-300' : 'border-gray-300',
+                  isReadOnly && 'bg-gray-50 cursor-not-allowed'
                 )}
                 placeholder="실제 사용할 프롬프트 내용을 입력하세요"
               />
@@ -285,13 +309,21 @@ export default function AddPromptModal({
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  disabled={isReadOnly}
+                  className={cn(
+                    "flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500",
+                    isReadOnly && 'bg-gray-50 cursor-not-allowed'
+                  )}
                   placeholder="태그를 입력하고 Enter를 누르세요"
                 />
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  disabled={isReadOnly}
+                  className={cn(
+                    "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors",
+                    isReadOnly && 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
+                  )}
                 >
                   <Plus size={16} />
                 </button>
@@ -305,13 +337,15 @@ export default function AddPromptModal({
                       className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm"
                     >
                       #{tag}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTag(tag)}
-                        className="text-purple-500 hover:text-purple-700"
-                      >
-                        <X size={14} />
-                      </button>
+                      {!isReadOnly && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveTag(tag)}
+                          className="text-purple-500 hover:text-purple-700"
+                        >
+                          <X size={14} />
+                        </button>
+                      )}
                     </span>
                   ))}
                 </div>
@@ -325,9 +359,16 @@ export default function AddPromptModal({
                   type="checkbox"
                   checked={formData.isFavorite}
                   onChange={(e) => setFormData({ ...formData, isFavorite: e.target.checked })}
-                  className="rounded text-purple-600 focus:ring-purple-500"
+                  disabled={isReadOnly}
+                  className={cn(
+                    "rounded text-purple-600 focus:ring-purple-500",
+                    isReadOnly && 'cursor-not-allowed'
+                  )}
                 />
-                <span className="text-sm text-gray-700">즐겨찾기에 추가</span>
+                <span className={cn(
+                  "text-sm text-gray-700",
+                  isReadOnly && 'text-gray-400'
+                )}>즐겨찾기에 추가</span>
               </label>
             </div>
           </div>
@@ -339,14 +380,16 @@ export default function AddPromptModal({
               onClick={handleClose}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              취소
+              {isReadOnly ? '닫기' : '취소'}
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              {initialData ? '수정하기' : '추가하기'}
-            </button>
+            {!isReadOnly && (
+              <button
+                type="submit"
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                {initialData ? '수정하기' : '추가하기'}
+              </button>
+            )}
           </div>
         </form>
       </div>
