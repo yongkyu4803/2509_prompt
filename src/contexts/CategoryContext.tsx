@@ -100,19 +100,26 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      console.log('🔄 카테고리 수정 시작:', { id, updates });
       const updatedCategory = await CategoryService.updateCategory(id, updates);
+      
+      // 로컬 상태 업데이트
       setCategories(prev => 
         prev.map(cat => cat.id === id ? updatedCategory : cat)
       );
-      console.log('카테고리 수정됨:', updatedCategory);
+      
+      console.log('✅ 카테고리 수정 완료 - 로컬 상태 업데이트됨:', updatedCategory);
+      
+      // 전체 카테고리를 다시 새로고침해서 다른 컴포넌트들도 업데이트되도록 함
+      console.log('🔄 전체 카테고리 새로고침 중...');
+      setTimeout(() => {
+        refreshCategories();
+      }, 500); // 500ms 후 새로고침
+      
     } catch (err) {
-      console.error('카테고리 수정 실패:', err);
-      console.log('데이터베이스 수정 실패, 로컬에서만 수정합니다.');
-      // 데이터베이스 수정 실패 시 로컬에서만 수정
-      setCategories(prev => 
-        prev.map(cat => cat.id === id ? { ...cat, ...updates, updatedAt: new Date().toISOString() } : cat)
-      );
-      // 사용자에게는 성공한 것처럼 보이도록 에러를 다시 던지지 않음
+      console.error('❌ 카테고리 수정 실패:', err);
+      // 실패 시에는 에러를 다시 던져서 사용자에게 알림
+      throw err;
     }
   };
 

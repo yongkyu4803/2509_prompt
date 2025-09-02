@@ -95,28 +95,32 @@ export default function CategoryManagementModal({ isOpen, onClose }: CategoryMan
     }
 
     try {
+      console.log('📝 카테고리 폼 제출:', { editingCategory: !!editingCategory, formData });
+      
       if (editingCategory) {
         await updateCategory(editingCategory.id, {
           label: formData.label,
-          description: formData.description || undefined,
+          // description: formData.description || undefined, // 임시로 비활성화
           color: formData.color,
           bgColor: formData.bgColor,
           borderColor: formData.borderColor,
         });
+        console.log('✅ 카테고리 수정 완료');
       } else {
         await addCategory({
           label: formData.label,
-          description: formData.description || undefined,
+          // description: formData.description || undefined, // 임시로 비활성화
           color: formData.color,
           bgColor: formData.bgColor,
           borderColor: formData.borderColor,
           isDefault: false,
         });
+        console.log('✅ 카테고리 추가 완료');
       }
       resetForm();
     } catch (error) {
+      console.error('❌ 카테고리 저장 오류:', error);
       alert(editingCategory ? '카테고리 수정에 실패했습니다.' : '카테고리 추가에 실패했습니다.');
-      console.error(error);
     }
   };
 

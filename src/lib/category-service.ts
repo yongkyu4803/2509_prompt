@@ -6,6 +6,7 @@ function transformRowToCategory(row: Record<string, unknown>): CategoryConfig {
   return {
     id: row.id as string,
     label: row.label as string,
+    description: row.description as string | undefined, // 컬럼이 없으면 undefined
     color: row.color as string,
     bgColor: row.bg_color as string,
     borderColor: row.border_color as string,
@@ -17,13 +18,20 @@ function transformRowToCategory(row: Record<string, unknown>): CategoryConfig {
 
 // CategoryConfig를 데이터베이스 삽입용으로 변환
 function transformCategoryToInsert(category: Omit<CategoryConfig, 'id' | 'createdAt' | 'updatedAt'>) {
-  return {
+  const insertData: Record<string, unknown> = {
     label: category.label,
     color: category.color,
     bg_color: category.bgColor,
     border_color: category.borderColor,
     is_default: category.isDefault || false,
   };
+  
+  // description 컬럼이 있으면 추가 (없으면 무시)
+  if (category.description !== undefined) {
+    insertData.description = category.description || null;
+  }
+  
+  return insertData;
 }
 
 // CategoryConfig를 데이터베이스 업데이트용으로 변환
@@ -34,6 +42,10 @@ function transformCategoryToUpdate(category: Partial<CategoryConfig>) {
   if (category.bgColor !== undefined) update.bg_color = category.bgColor;
   if (category.borderColor !== undefined) update.border_color = category.borderColor;
   if (category.isDefault !== undefined) update.is_default = category.isDefault;
+  
+  // description 컬럼이 있을 때만 업데이트 시도 (나중에 추가되면 활성화)
+  // if (category.description !== undefined) update.description = category.description || null;
+  
   return update;
 }
 

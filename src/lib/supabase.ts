@@ -68,6 +68,7 @@ export type Database = {
         Row: {
           id: string;
           label: string;
+          description: string | null;
           color: string;
           bg_color: string;
           border_color: string;
@@ -78,6 +79,7 @@ export type Database = {
         Insert: {
           id?: string;
           label: string;
+          description?: string | null;
           color: string;
           bg_color: string;
           border_color: string;
@@ -88,6 +90,7 @@ export type Database = {
         Update: {
           id?: string;
           label?: string;
+          description?: string | null;
           color?: string;
           bg_color?: string;
           border_color?: string;
