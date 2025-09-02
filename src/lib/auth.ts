@@ -78,27 +78,36 @@ export function getLoginSession(): LoginSession | null {
 export function getUserRole(): UserRole {
   if (typeof window === 'undefined') return 'viewer'; // 서버사이드에서는 기본적으로 viewer
   
-  // 1. 동적 로그인 세션 확인
+  // 1. 동적 로그인 세션 확인 (최우선)
   const session = getLoginSession();
+  console.log('🔐 [getUserRole] 세션 확인:', session);
+  
   if (session && session.isLoggedIn) {
+    console.log('✅ [getUserRole] 동적 로그인 세션 사용:', session.role);
     return session.role;
   }
   
-  // 2. 환경 변수 확인 (기존 방식)
-  const role = process.env.NEXT_PUBLIC_USER_ROLE as UserRole;
+  // 2. 환경 변수 확인 (폴백) - 하지만 동적 로그인이 우선
+  const envRole = process.env.NEXT_PUBLIC_USER_ROLE as UserRole;
+  console.log('🔧 [getUserRole] 환경 변수 역할:', envRole);
   
-  // 유효하지 않은 역할이면 기본적으로 viewer
-  if (!role || !['admin', 'viewer'].includes(role)) {
-    return 'viewer';
+  // 세션이 없고 환경 변수가 유효한 경우에만 환경 변수 사용
+  if (envRole && ['admin', 'viewer'].includes(envRole)) {
+    console.log('📝 [getUserRole] 환경 변수 사용 (세션 없음):', envRole);
+    return envRole;
   }
   
-  return role;
+  // 3. 기본값: viewer
+  console.log('⚠️ [getUserRole] 기본값 viewer 사용');
+  return 'viewer';
 }
 
 // 현재 사용자 권한 가져오기
 export function getUserPermissions(): UserPermissions {
   const role = getUserRole();
-  return ROLE_PERMISSIONS[role];
+  const permissions = ROLE_PERMISSIONS[role];
+  console.log('🔑 [getUserPermissions] 권한 확인:', { role, permissions });
+  return permissions;
 }
 
 // 특정 권한 확인
@@ -169,10 +178,15 @@ export function logout(): void {
 // 로그인 상태 확인
 export function isLoggedIn(): boolean {
   const session = getLoginSession();
-  return session?.isLoggedIn ?? false;
+  const loggedIn = session?.isLoggedIn ?? false;
+  console.log('🚪 [isLoggedIn] 로그인 상태:', { session, loggedIn });
+  return loggedIn;
 }
 
 // 관리자인지 확인
 export function isAdmin(): boolean {
-  return getUserRole() === 'admin';
+  const role = getUserRole();
+  const adminStatus = role === 'admin';
+  console.log('👑 [isAdmin] 관리자 확인:', { role, adminStatus });
+  return adminStatus;
 }

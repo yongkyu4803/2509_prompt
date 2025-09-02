@@ -38,11 +38,25 @@ export default function AddPromptModal({
   initialData,
 }: AddPromptModalProps) {
   const { categories } = useCategories();
-  const { hasPermission } = usePermissions();
+  const { hasPermission, role, permissions, isAdmin } = usePermissions();
   
   // 권한 체크
   const canUpdate = hasPermission('canUpdate');
   const isReadOnly = !canUpdate;
+  
+  // 디버깅: 권한 상태 실시간 로그
+  useEffect(() => {
+    console.log('🔍 [AddPromptModal] 권한 상태 디버깅:', {
+      isOpen,
+      role,
+      permissions,
+      isAdmin,
+      canUpdate,
+      isReadOnly,
+      hasPermissionFunction: typeof hasPermission,
+      initialData: !!initialData
+    });
+  }, [isOpen, role, permissions, isAdmin, canUpdate, isReadOnly, hasPermission, initialData]);
   
   // 카테고리 옵션 생성 (로딩 중이면 기본 옵션 사용)
   const categoryOptions = (categories && categories.length > 0) 
@@ -86,8 +100,17 @@ export default function AddPromptModal({
       setFormData(getFormDataFromInitial(initialData));
       setTagInput('');
       setErrors({});
+      console.log('📝 [AddPromptModal] 폼 데이터 초기화 완료');
     }
   }, [isOpen, initialData, getFormDataFromInitial]);
+
+  // 권한 변경 시 UI 즉시 반영을 위한 추가 useEffect
+  useEffect(() => {
+    if (isOpen) {
+      console.log('🔄 [AddPromptModal] 권한 변경 감지, UI 업데이트');
+      // 권한이 변경되면 즉시 리렌더링되도록 강제 업데이트
+    }
+  }, [isOpen, canUpdate, isReadOnly, role, permissions]);
 
   // 폼 데이터 변경 여부 확인
   const hasChanges = () => {

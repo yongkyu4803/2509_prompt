@@ -54,10 +54,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 로그인 함수
   const login = async (password: string) => {
+    console.log('🔐 [AuthContext] 로그인 시도 시작');
     const result = await authLogin(password);
     
     if (result.success) {
+      console.log('✅ [AuthContext] 로그인 성공, 즉시 권한 새로고침');
       refreshAuth();
+      
+      // 강제 리렌더링을 위한 상태 즉시 업데이트
+      const newRole = getUserRole();
+      const newPermissions = getUserPermissions();
+      const newIsLoggedIn = isLoggedIn();
+      const newIsAdmin = isAdmin();
+      
+      console.log('🔄 [AuthContext] 즉시 상태 업데이트:', {
+        newRole,
+        newPermissions,
+        newIsLoggedIn,
+        newIsAdmin
+      });
+      
+      setRole(newRole);
+      setPermissions(newPermissions);
+      setLoggedIn(newIsLoggedIn);
+      setAdmin(newIsAdmin);
+    } else {
+      console.log('❌ [AuthContext] 로그인 실패:', result.message);
     }
     
     return result;
@@ -74,14 +96,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshAuth();
     setLoading(false);
 
-    // 세션 만료 체크를 위한 주기적 검사 (5분마다)
+    // 세션 만료 체크를 위한 주기적 검사 (1분마다)
     const intervalId = setInterval(() => {
       const session = getLoginSession();
+      console.log('🔍 [AuthContext] 세션 체크:', { session, currentLoggedIn: loggedIn });
       if (!session && loggedIn) {
         // 세션이 만료된 경우 상태 업데이트
+        console.log('⏰ [AuthContext] 세션 만료 감지, 상태 업데이트');
         refreshAuth();
       }
-    }, 5 * 60 * 1000); // 5분
+    }, 1 * 60 * 1000); // 1분
 
     return () => clearInterval(intervalId);
   }, [loggedIn]);
