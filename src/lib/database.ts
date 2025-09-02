@@ -50,14 +50,20 @@ async function convertLegacyToCategory(legacyCategory: string): Promise<string> 
       return '91a38be2-3dca-4c28-a7c7-bce2ed9d54d2'; // 프롬프트 기본 UUID
     }
     
-    // categories 테이블에서 라벨로 UUID 찾기
-    const { data: categoryData, error } = await supabase
+    // categories 테이블에서 라벨로 UUID 찾기 (URL 인코딩 문제 방지)
+    const { data: categories, error } = await supabase
       .from('categories')
-      .select('id')
-      .eq('label', label)
-      .single();
+      .select('id, label');
     
-    if (error || !categoryData) {
+    if (error) {
+      console.warn('카테고리 조회 중 오류:', error);
+      return '91a38be2-3dca-4c28-a7c7-bce2ed9d54d2';
+    }
+    
+    // 클라이언트 사이드에서 라벨 매칭 (URL 인코딩 문제 방지)
+    const categoryData = categories?.find(cat => cat.label === label);
+    
+    if (!categoryData) {
       console.warn('카테고리 UUID를 찾을 수 없음, 기본값 사용:', label);
       return '91a38be2-3dca-4c28-a7c7-bce2ed9d54d2'; // 프롬프트 기본 UUID
     }
