@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 import { PromptCategory } from '@/lib/types';
 import { createCategoryOptions, DEFAULT_CATEGORY_OPTIONS } from '@/lib/constants';
@@ -38,73 +38,61 @@ export default function AddPromptModal({
   initialData,
 }: AddPromptModalProps) {
   const { categories } = useCategories();
-  const { hasPermission, role } = usePermissions();
+  const { hasPermission } = usePermissions();
   
   // 권한 체크
   const canUpdate = hasPermission('canUpdate');
   const isReadOnly = !canUpdate;
   
-  // 디버깅: 권한 상태 로그 (모달이 열릴 때만)
-  useEffect(() => {
-    if (isOpen) {
-      console.log('🔍 [AddPromptModal] 권한 상태:', {
-        role,
-        canUpdate,
-        isReadOnly,
-        initialData: !!initialData
-      });
-    }
-  }, [isOpen, role, canUpdate, isReadOnly, initialData]);
   
   // 카테고리 옵션 생성 (로딩 중이면 기본 옵션 사용)
   const categoryOptions = (categories && categories.length > 0) 
     ? createCategoryOptions(categories).filter(opt => opt.value !== 'all')
     : DEFAULT_CATEGORY_OPTIONS.filter(opt => opt.value !== 'all');
 
-  // 단순화된 폼 데이터 생성 함수
-  const createFormData = useCallback((data: typeof initialData) => {
-    const defaultCategory = (categoryOptions.length > 0 ? categoryOptions[0].value : 'development') as PromptCategory;
-    
-    return {
-      title: data?.title || '',
-      description: data?.description || '',
-      content: data?.content || '',
-      category: data?.category || defaultCategory,
-      tags: data?.tags || [],
-      usageHours: data?.usageHours || 0,
-      isFavorite: data?.isFavorite || false,
-    };
-  }, [categoryOptions]);
 
-  const [formData, setFormData] = useState(() => createFormData(initialData));
+  const [formData, setFormData] = useState(() => ({
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    content: initialData?.content || '',
+    category: initialData?.category || 'development' as PromptCategory,
+    tags: initialData?.tags || [],
+    usageHours: initialData?.usageHours || 0,
+    isFavorite: initialData?.isFavorite || false,
+  }));
   const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
-  // initialData가 변경될 때 formData 업데이트
+  // initialData가 변경될 때만 formData 업데이트 (categoryOptions 의존성 제거)
   useEffect(() => {
     if (isOpen) {
-      const defaultCategory = (categoryOptions.length > 0 ? categoryOptions[0].value : 'development') as PromptCategory;
-      
       setFormData({
         title: initialData?.title || '',
         description: initialData?.description || '',
         content: initialData?.content || '',
-        category: initialData?.category || defaultCategory,
+        category: initialData?.category || 'development',
         tags: initialData?.tags || [],
         usageHours: initialData?.usageHours || 0,
         isFavorite: initialData?.isFavorite || false,
       });
       setTagInput('');
       setErrors({});
-      console.log('📝 [AddPromptModal] 폼 데이터 초기화 완료');
     }
-  }, [isOpen, initialData, categoryOptions]);
+  }, [isOpen, initialData]);
 
 
   // 폼 데이터 변경 여부 확인
   const hasChanges = () => {
-    const originalData = createFormData(initialData);
+    const originalData = {
+      title: initialData?.title || '',
+      description: initialData?.description || '',
+      content: initialData?.content || '',
+      category: initialData?.category || 'development' as PromptCategory,
+      tags: initialData?.tags || [],
+      usageHours: initialData?.usageHours || 0,
+      isFavorite: initialData?.isFavorite || false,
+    };
     return JSON.stringify(formData) !== JSON.stringify(originalData);
   };
 
