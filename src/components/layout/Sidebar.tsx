@@ -64,7 +64,6 @@ export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, onCate
               </div>
               <div>
                 <h1 className="text-lg font-bold text-gray-900">프롬프트 라이브러리</h1>
-                <p className="text-sm text-gray-500">나만의 프롬프트 모음</p>
               </div>
             </Link>
             
