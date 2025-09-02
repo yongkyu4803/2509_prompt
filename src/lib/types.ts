@@ -24,6 +24,7 @@ export interface PromptContextType {
   sortBy: SortBy;
   loading: boolean;
   error: string | null;
+  clearError: () => void;
   setSearchQuery: (query: string) => void;
   setSelectedCategory: (category: PromptCategory | 'all') => void;
   setViewMode: (mode: 'grid' | 'list') => void;

@@ -39,6 +39,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const currentLoggedIn = isLoggedIn();
     const currentAdmin = isAdmin();
 
+    console.log('🔄 AuthContext refreshAuth:', {
+      currentRole,
+      currentPermissions,
+      currentLoggedIn,
+      currentAdmin
+    });
+
     setRole(currentRole);
     setPermissions(currentPermissions);
     setLoggedIn(currentLoggedIn);

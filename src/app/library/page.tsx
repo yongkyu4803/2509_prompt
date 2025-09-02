@@ -22,6 +22,7 @@ export default function Home() {
     sortBy,
     loading,
     error,
+    clearError,
     setSearchQuery,
     setSelectedCategory,
     setViewMode,
@@ -75,25 +76,36 @@ export default function Home() {
   };
 
   const handleEditPrompt = () => {
-    if (selectedPrompt && hasPermission('canUpdate')) {
+    console.log('🔧 handleEditPrompt 호출됨:', { selectedPrompt, hasUpdatePermission: hasPermission('canUpdate') });
+    if (selectedPrompt) {
       setEditingPrompt(selectedPrompt);
       setSelectedPrompt(null);
+      console.log('✅ 편집 모드로 전환됨');
+    } else {
+      console.log('❌ selectedPrompt가 없음');
     }
   };
 
   const handleDeletePrompt = () => {
-    if (selectedPrompt && hasPermission('canDelete')) {
+    console.log('🗑️ handleDeletePrompt 호출됨:', { selectedPrompt, hasDeletePermission: hasPermission('canDelete') });
+    if (selectedPrompt) {
       setShowDeleteConfirm(selectedPrompt.id);
+      console.log('✅ 삭제 확인 모달 표시됨');
+    } else {
+      console.log('❌ selectedPrompt가 없음');
     }
   };
 
   const confirmDelete = async (id: string) => {
     try {
+      console.log('🗑️ 프롬프트 삭제 시작, ID:', id);
       await deletePrompt(id);
       setShowDeleteConfirm(null);
       setSelectedPrompt(null);
+      console.log('✅ 프롬프트 삭제 완료');
     } catch (error) {
-      console.error('Failed to delete prompt:', error);
+      console.error('❌ 프롬프트 삭제 실패:', error);
+      // 에러 메시지를 사용자에게 표시하는 것은 PromptContext에서 처리
     }
   };
 
@@ -136,8 +148,21 @@ export default function Home() {
     <>
       {/* 에러 표시 */}
       {error && (
-        <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50">
-          <p className="text-sm">{error}</p>
+        <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50 shadow-lg">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm font-medium">{error}</p>
+            <button 
+              onClick={clearError}
+              className="ml-2 text-red-500 hover:text-red-700"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
         </div>
       )}
 
@@ -163,7 +188,14 @@ export default function Home() {
           prompts={displayPrompts}
           viewMode={viewMode}
           onPromptClick={handlePromptClick}
-          onFavoriteToggle={(id: string) => hasPermission('canUpdate') ? toggleFavorite(id) : undefined}
+          onFavoriteToggle={(id: string) => {
+            console.log('⭐ onFavoriteToggle 호출됨:', { id, hasPermission: hasPermission('canUpdate') });
+            if (hasPermission('canUpdate')) {
+              toggleFavorite(id);
+            } else {
+              console.log('❌ 즐겨찾기 토글 권한 없음');
+            }
+          }}
         />
       </Layout>
 
@@ -175,7 +207,14 @@ export default function Home() {
           onClose={() => setSelectedPrompt(null)}
           onEdit={handleEditPrompt}
           onDelete={handleDeletePrompt}
-          onFavoriteToggle={() => hasPermission('canUpdate') ? toggleFavorite(selectedPrompt.id) : undefined}
+          onFavoriteToggle={() => {
+            console.log('⭐ Modal onFavoriteToggle 호출됨:', { promptId: selectedPrompt.id, hasPermission: hasPermission('canUpdate') });
+            if (hasPermission('canUpdate')) {
+              toggleFavorite(selectedPrompt.id);
+            } else {
+              console.log('❌ 모달에서 즐겨찾기 토글 권한 없음');
+            }
+          }}
         />
       )}
 

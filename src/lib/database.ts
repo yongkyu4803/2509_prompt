@@ -300,39 +300,50 @@ export class PromptService {
   // 즐겨찾기 토글
   static async toggleFavorite(id: string): Promise<Prompt> {
     try {
+      console.log('⭐ PromptService.toggleFavorite 시작, ID:', id);
+      const userId = getOrCreateUserId();
+      console.log('👤 사용자 ID:', userId);
+
       // 먼저 현재 상태를 가져옴
       const { data: currentData, error: fetchError } = await supabase
         .from('prompts')
         .select('is_favorite')
         .eq('id', id)
-        .eq('user_id', getOrCreateUserId())
+        .eq('user_id', userId)
         .single();
 
       if (fetchError) {
-        console.error('Error fetching current favorite status:', fetchError);
+        console.error('❌ 현재 즐겨찾기 상태 조회 실패:', fetchError);
         throw fetchError;
       }
+
+      console.log('📋 현재 즐겨찾기 상태:', currentData.is_favorite);
+      const newFavoriteStatus = !currentData.is_favorite;
+      console.log('📋 새로운 즐겨찾기 상태:', newFavoriteStatus);
 
       // 상태를 반전시켜서 업데이트
       const { data, error } = await supabase
         .from('prompts')
         .update({ 
-          is_favorite: !currentData.is_favorite,
+          is_favorite: newFavoriteStatus,
           updated_at: new Date().toISOString()
         })
         .eq('id', id)
-        .eq('user_id', getOrCreateUserId())
+        .eq('user_id', userId)
         .select()
         .single();
 
       if (error) {
-        console.error('Error toggling favorite:', error);
+        console.error('❌ 즐겨찾기 토글 업데이트 실패:', error);
         throw error;
       }
 
-      return await transformSupabaseToFrontend(data);
+      console.log('✅ Supabase 즐겨찾기 토글 성공');
+      const result = await transformSupabaseToFrontend(data);
+      console.log('📤 변환된 결과:', result.isFavorite);
+      return result;
     } catch (error) {
-      console.error('Error in toggleFavorite:', error);
+      console.error('💥 PromptService.toggleFavorite 오류:', error);
       throw error;
     }
   }

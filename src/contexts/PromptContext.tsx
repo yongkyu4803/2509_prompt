@@ -110,17 +110,26 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
 
   const toggleFavorite = async (id: string) => {
     try {
+      console.log('⭐ PromptContext.toggleFavorite 시작, ID:', id);
+      const currentPrompt = prompts.find(p => p.id === id);
+      console.log('📋 현재 즐겨찾기 상태:', currentPrompt?.isFavorite);
+      
       const updatedPrompt = await PromptService.toggleFavorite(id);
+      console.log('✅ PromptService 즐겨찾기 토글 성공');
+      console.log('📋 업데이트된 즐겨찾기 상태:', updatedPrompt.isFavorite);
+      
       setPrompts(prevPrompts =>
         prevPrompts.map(prompt =>
           prompt.id === id ? updatedPrompt : prompt
         )
       );
+      console.log('✅ 로컬 상태 업데이트 완료');
     } catch (error) {
-      console.error('Failed to toggle favorite:', error);
+      console.error('❌ PromptContext.toggleFavorite 실패:', error);
       setError('즐겨찾기 업데이트에 실패했습니다.');
       
       // Fallback to local update
+      console.log('🔄 로컬 즐겨찾기 토글 폴백 실행');
       setPrompts(prevPrompts =>
         prevPrompts.map(prompt =>
           prompt.id === id
@@ -193,15 +202,31 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
 
   const deletePrompt = async (id: string) => {
     try {
+      console.log('🗑️ PromptContext.deletePrompt 시작, ID:', id);
+      console.log('📊 삭제 전 프롬프트 수:', prompts.length);
+      
       await PromptService.deletePrompt(id);
-      setPrompts(prevPrompts => prevPrompts.filter(prompt => prompt.id !== id));
+      console.log('✅ PromptService 삭제 성공');
+      
+      setPrompts(prevPrompts => {
+        const newPrompts = prevPrompts.filter(prompt => prompt.id !== id);
+        console.log('📊 삭제 후 프롬프트 수:', newPrompts.length);
+        console.log('✅ 로컬 상태에서 프롬프트 제거 완료');
+        return newPrompts;
+      });
     } catch (error) {
-      console.error('Failed to delete prompt:', error);
+      console.error('❌ PromptContext.deletePrompt 실패:', error);
       setError('프롬프트 삭제에 실패했습니다.');
       
       // Fallback to local deletion
+      console.log('🔄 로컬 삭제 폴백 실행');
       setPrompts(prevPrompts => prevPrompts.filter(prompt => prompt.id !== id));
     }
+  };
+
+  const clearError = () => {
+    console.log('🧹 에러 메시지 클리어');
+    setError(null);
   };
 
   const contextValue: PromptContextType = {
@@ -213,6 +238,7 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
     sortBy,
     loading,
     error,
+    clearError,
     setSearchQuery,
     setSelectedCategory,
     setViewMode,
