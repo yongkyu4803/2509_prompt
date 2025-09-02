@@ -61,33 +61,22 @@ export default function AddPromptModal({
     ? createCategoryOptions(categories).filter(opt => opt.value !== 'all')
     : DEFAULT_CATEGORY_OPTIONS.filter(opt => opt.value !== 'all');
 
-  // 기본 폼 데이터 생성 함수
-  const getDefaultFormData = useCallback(() => ({
-    title: '',
-    description: '',
-    content: '',
-    category: (categoryOptions.length > 0 ? categoryOptions[0].value : 'development') as PromptCategory,
-    tags: [],
-    usageHours: 0,
-    isFavorite: false,
-  }), [categoryOptions]);
-
-  // 편집 데이터에서 폼 데이터 생성 함수
-  const getFormDataFromInitial = useCallback((data: typeof initialData) => {
-    if (!data) return getDefaultFormData();
+  // 단순화된 폼 데이터 생성 함수
+  const createFormData = useCallback((data: typeof initialData) => {
+    const defaultCategory = (categoryOptions.length > 0 ? categoryOptions[0].value : 'development') as PromptCategory;
     
     return {
-      title: data.title || '',
-      description: data.description || '',
-      content: data.content || '',
-      category: data.category || (categoryOptions.length > 0 ? categoryOptions[0].value : 'development') as PromptCategory,
-      tags: data.tags || [],
-      usageHours: data.usageHours || 0,
-      isFavorite: data.isFavorite || false,
+      title: data?.title || '',
+      description: data?.description || '',
+      content: data?.content || '',
+      category: data?.category || defaultCategory,
+      tags: data?.tags || [],
+      usageHours: data?.usageHours || 0,
+      isFavorite: data?.isFavorite || false,
     };
-  }, [categoryOptions, getDefaultFormData]);
+  }, [categoryOptions]);
 
-  const [formData, setFormData] = useState(() => getFormDataFromInitial(initialData));
+  const [formData, setFormData] = useState(() => createFormData(initialData));
   const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -95,17 +84,27 @@ export default function AddPromptModal({
   // initialData가 변경될 때 formData 업데이트
   useEffect(() => {
     if (isOpen) {
-      setFormData(getFormDataFromInitial(initialData));
+      const defaultCategory = (categoryOptions.length > 0 ? categoryOptions[0].value : 'development') as PromptCategory;
+      
+      setFormData({
+        title: initialData?.title || '',
+        description: initialData?.description || '',
+        content: initialData?.content || '',
+        category: initialData?.category || defaultCategory,
+        tags: initialData?.tags || [],
+        usageHours: initialData?.usageHours || 0,
+        isFavorite: initialData?.isFavorite || false,
+      });
       setTagInput('');
       setErrors({});
       console.log('📝 [AddPromptModal] 폼 데이터 초기화 완료');
     }
-  }, [isOpen, initialData, getFormDataFromInitial]);
+  }, [isOpen, initialData, categoryOptions]);
 
 
   // 폼 데이터 변경 여부 확인
   const hasChanges = () => {
-    const originalData = getFormDataFromInitial(initialData);
+    const originalData = createFormData(initialData);
     return JSON.stringify(formData) !== JSON.stringify(originalData);
   };
 
