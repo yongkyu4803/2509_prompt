@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI 프롬프트 워크스페이스 - 프롬프트 라이브러리 & 스터디",
+  title: "GQ-AI 프롬프트 라이브러리 & 스터디",
   description: "AI 프롬프트를 체계적으로 관리하고, 프롬프트 엔지니어링을 학습할 수 있는 통합 플랫폼",
 };
 

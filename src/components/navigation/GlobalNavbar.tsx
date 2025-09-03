@@ -13,7 +13,6 @@ interface NavTab {
   label: string;
   href: string;
   icon: React.ElementType;
-  description: string;
 }
 
 const tabs: NavTab[] = [
@@ -21,15 +20,13 @@ const tabs: NavTab[] = [
     id: 'library',
     label: '프롬프트 라이브러리',
     href: '/library',
-    icon: BookOpen,
-    description: '나만의 프롬프트 모음'
+    icon: BookOpen
   },
   {
     id: 'study',
     label: '프롬프트 스터디',
     href: '/study',
-    icon: GraduationCap,
-    description: '학습 가이드 및 실무 팁'
+    icon: GraduationCap
   }
 ];
 
@@ -66,7 +63,7 @@ export default function GlobalNavbar() {
               <BookOpen className="text-white" size={18} />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">AI 프롬프트 워크스페이스</h1>
+              <h1 className="text-lg font-bold text-gray-900"></h1>
             </div>
           </div>
 
@@ -159,16 +156,6 @@ export default function GlobalNavbar() {
           </div>
         </div>
 
-        {/* 활성 탭 설명 (데스크톱만) */}
-        <div className="hidden sm:block pb-3">
-          {tabs.map((tab) => (
-            activeTab === tab.id && (
-              <p key={tab.id} className="text-sm text-gray-600">
-                {tab.description}
-              </p>
-            )
-          ))}
-        </div>
       </div>
 
       {/* 로그인 모달 */}
