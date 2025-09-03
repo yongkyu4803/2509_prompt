@@ -41,7 +41,7 @@ async function convertLegacyToCategory(legacyCategory: string): Promise<string> 
       'marketing': '보도자료',
       'analysis': '이슈분석',
       'creative': '질의서작성',
-      'business': '데이터분석',
+      'business': '시각화', // 실제 DB의 카테고리명과 일치
     };
     
     const label = legacyToLabelMapping[legacyCategory];
@@ -107,7 +107,7 @@ async function convertCategoryToLegacy(categoryId: string): Promise<string> {
       '보도자료': 'marketing', 
       '이슈분석': 'analysis',
       '질의서작성': 'creative',
-      '데이터분석': 'business',
+      '시각화': 'business', // 실제 DB의 카테고리명과 일치
       // 새로 추가된 사용자 정의 카테고리들은 UUID를 직접 반환하도록 함
       // 기존 라벨들도 대응 (하위 호환성)
       '개발': 'development',

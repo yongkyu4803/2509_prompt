@@ -89,6 +89,8 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
 
   // 카테고리 수정
   const updateCategory = async (id: string, updates: Partial<CategoryConfig>) => {
+    console.log('🚀 CategoryContext.updateCategory 호출됨:', { id, updates });
+    
     try {
       // 임시 ID인 경우 (테이블이 아직 생성되지 않은 상태) 로컬에서만 수정
       if (id.startsWith('temp-')) {
@@ -100,24 +102,36 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      console.log('🔄 카테고리 수정 시작:', { id, updates });
+      console.log('🔄 데이터베이스 카테고리 수정 시작:', { id, updates });
+      console.log('📋 수정 전 categories 상태:', categories.map(c => ({ id: c.id, label: c.label })));
+      
       const updatedCategory = await CategoryService.updateCategory(id, updates);
+      console.log('✅ CategoryService.updateCategory 완료:', updatedCategory);
       
       // 로컬 상태 업데이트
-      setCategories(prev => 
-        prev.map(cat => cat.id === id ? updatedCategory : cat)
-      );
+      setCategories(prev => {
+        const newCategories = prev.map(cat => cat.id === id ? updatedCategory : cat);
+        console.log('📋 수정 후 categories 상태:', newCategories.map(c => ({ id: c.id, label: c.label })));
+        return newCategories;
+      });
       
-      console.log('✅ 카테고리 수정 완료 - 로컬 상태 업데이트됨:', updatedCategory);
+      console.log('✅ 카테고리 수정 완료 - 로컬 상태 업데이트됨');
       
       // 전체 카테고리를 다시 새로고침해서 다른 컴포넌트들도 업데이트되도록 함
-      console.log('🔄 전체 카테고리 새로고침 중...');
+      console.log('🔄 전체 카테고리 새로고침 예약 중...');
       setTimeout(() => {
+        console.log('🔄 전체 카테고리 새로고침 실행 중...');
         refreshCategories();
-      }, 500); // 500ms 후 새로고침
+      }, 1000); // 1초 후 새로고침 (시간을 늘려서 확실히)
       
     } catch (err) {
-      console.error('❌ 카테고리 수정 실패:', err);
+      console.error('❌ CategoryContext.updateCategory 실패:', err);
+      console.error('❌ 오류 상세:', {
+        message: err instanceof Error ? err.message : '알 수 없는 오류',
+        stack: err instanceof Error ? err.stack : undefined,
+        id,
+        updates
+      });
       // 실패 시에는 에러를 다시 던져서 사용자에게 알림
       throw err;
     }

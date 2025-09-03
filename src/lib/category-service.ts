@@ -94,7 +94,10 @@ export class CategoryService {
 
   static async updateCategory(id: string, updates: Partial<CategoryConfig>): Promise<CategoryConfig> {
     try {
+      console.log('🔄 CategoryService.updateCategory 시작:', { id, updates });
+      
       const updateData = transformCategoryToUpdate(updates);
+      console.log('📤 Supabase 업데이트 데이터:', updateData);
       
       const { data, error } = await supabase
         .from('categories')
@@ -104,13 +107,30 @@ export class CategoryService {
         .single();
 
       if (error) {
-        console.error('카테고리 업데이트 중 오류:', error);
+        console.error('❌ Supabase 카테고리 업데이트 오류:', error);
+        console.error('❌ 오류 상세:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          id,
+          updateData
+        });
         throw error;
       }
 
-      return transformRowToCategory(data);
+      if (!data) {
+        console.error('❌ 업데이트 후 데이터가 null입니다:', { id, updateData });
+        throw new Error('카테고리 업데이트 후 데이터를 가져올 수 없습니다.');
+      }
+
+      console.log('✅ Supabase 업데이트 성공:', data);
+      const transformedData = transformRowToCategory(data);
+      console.log('✅ 변환된 카테고리 데이터:', transformedData);
+      
+      return transformedData;
     } catch (error) {
-      console.error('카테고리 업데이트 서비스 오류:', error);
+      console.error('💥 CategoryService.updateCategory 오류:', error);
       throw error;
     }
   }
