@@ -106,39 +106,6 @@ export default function LevelPromptGrid({
 
   return (
     <div className="space-y-8">
-      {/* 전체 통계 */}
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-bold text-purple-700">프롬프트 학습 로드맵</h1>
-            <p className="text-sm text-purple-600">체계적인 단계별 학습으로 프롬프트 전문가가 되어보세요</p>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-purple-700">{prompts.length}</div>
-            <div className="text-sm text-purple-600">전체 프롬프트</div>
-          </div>
-        </div>
-        
-        {/* 진행률 바 */}
-        <div className="mt-4 flex gap-1">
-          {getSortedCategories().map(level => {
-            const count = groupedPrompts[level.id]?.length || 0;
-            const percentage = prompts.length > 0 ? (count / prompts.length) * 100 : 0;
-            
-            return (
-              <div key={level.id} className="flex-1">
-                <div 
-                  className={`h-2 rounded-full ${level.bgColor} border ${level.borderColor}`}
-                  style={{ width: `${Math.max(percentage, 5)}%` }}
-                />
-                <div className="text-xs text-center mt-1 text-gray-600">
-                  {level.level} ({count})
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
       {/* 레벨별 프롬프트 섹션 */}
       {getSortedCategories().map(level => (
