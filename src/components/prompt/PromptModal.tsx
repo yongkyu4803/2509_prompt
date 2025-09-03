@@ -15,7 +15,7 @@ interface PromptModalProps {
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
-  onFavoriteToggle: () => void;
+  onFavoriteToggle?: () => void; // 선택사항으로 변경
 }
 
 export default function PromptModal({
@@ -24,7 +24,7 @@ export default function PromptModal({
   onClose,
   onEdit,
   onDelete,
-  onFavoriteToggle,
+  // onFavoriteToggle,
 }: PromptModalProps) {
   const { categories } = useCategories();
   
@@ -75,13 +75,16 @@ export default function PromptModal({
             >
               {categoryConfig.label}
             </div>
+            {/* 사용시간 표시 - 제거됨
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <Clock size={14} />
               <span>{formatUsageTime(prompt.usageHours)}</span>
             </div>
+            */}
           </div>
           
           <div className="flex items-center gap-2">
+            {/* 즐겨찾기 버튼 - 주석처리됨
             <PermissionGuard permission="canUpdate">
               <button
                 onClick={onFavoriteToggle}
@@ -99,6 +102,7 @@ export default function PromptModal({
                 />
               </button>
             </PermissionGuard>
+            */}
             
             <PermissionGuard permission="canUpdate">
               <button

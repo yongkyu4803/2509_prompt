@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
-import PromptGrid from '@/components/prompt/PromptGrid';
+import LevelPromptGrid from '@/components/prompt/LevelPromptGrid';
 import PromptModal from '@/components/prompt/PromptModal';
 import AddPromptModal from '@/components/prompt/AddPromptModal';
 import CategoryManagementModal from '@/components/category/CategoryManagementModal';
@@ -184,18 +184,18 @@ export default function Home() {
         }}
       >
         <NoticeCards />
-        <PromptGrid
+        <LevelPromptGrid
           prompts={displayPrompts}
           viewMode={viewMode}
           onPromptClick={handlePromptClick}
-          onFavoriteToggle={(id: string) => {
-            console.log('⭐ onFavoriteToggle 호출됨:', { id, hasPermission: hasPermission('canUpdate') });
-            if (hasPermission('canUpdate')) {
-              toggleFavorite(id);
-            } else {
-              console.log('❌ 즐겨찾기 토글 권한 없음');
-            }
-          }}
+          // onFavoriteToggle={(id: string) => {
+          //   console.log('⭐ onFavoriteToggle 호출됨:', { id, hasPermission: hasPermission('canUpdate') });
+          //   if (hasPermission('canUpdate')) {
+          //     toggleFavorite(id);
+          //   } else {
+          //     console.log('❌ 즐겨찾기 토글 권한 없음');
+          //   }
+          // }}
         />
       </Layout>
 
@@ -207,14 +207,14 @@ export default function Home() {
           onClose={() => setSelectedPrompt(null)}
           onEdit={handleEditPrompt}
           onDelete={handleDeletePrompt}
-          onFavoriteToggle={() => {
-            console.log('⭐ Modal onFavoriteToggle 호출됨:', { promptId: selectedPrompt.id, hasPermission: hasPermission('canUpdate') });
-            if (hasPermission('canUpdate')) {
-              toggleFavorite(selectedPrompt.id);
-            } else {
-              console.log('❌ 모달에서 즐겨찾기 토글 권한 없음');
-            }
-          }}
+          // onFavoriteToggle={() => {
+          //   console.log('⭐ Modal onFavoriteToggle 호출됨:', { promptId: selectedPrompt.id, hasPermission: hasPermission('canUpdate') });
+          //   if (hasPermission('canUpdate')) {
+          //     toggleFavorite(selectedPrompt.id);
+          //   } else {
+          //     console.log('❌ 모달에서 즐겨찾기 토글 권한 없음');
+          //   }
+          // }}
         />
       )}
 

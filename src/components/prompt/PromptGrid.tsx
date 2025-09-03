@@ -65,10 +65,10 @@ export default function PromptGrid({
             prompt={prompt}
             viewMode={viewMode}
             onClick={() => onPromptClick(prompt)}
-            onFavoriteClick={(e) => {
-              e.stopPropagation();
-              onFavoriteToggle(prompt.id);
-            }}
+            // onFavoriteClick={(e) => {
+            //   e.stopPropagation();
+            //   onFavoriteToggle(prompt.id);
+            // }}
           />
         ))}
       </div>

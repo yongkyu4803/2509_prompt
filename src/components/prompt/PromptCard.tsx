@@ -1,10 +1,10 @@
 'use client';
 
-import { Star, Clock } from 'lucide-react';
+// import { Star, Clock } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { findCategoryConfig, LEGACY_CATEGORY_CONFIG } from '@/lib/constants';
-import { cn, formatUsageTime } from '@/lib/utils';
-import { PermissionGuard } from '@/components/auth/PermissionGuard';
+import { cn } from '@/lib/utils';
+// import { PermissionGuard } from '@/components/auth/PermissionGuard';
 import { useCategories } from '@/contexts/CategoryContext';
 import { useMemo } from 'react';
 
@@ -12,14 +12,14 @@ interface PromptCardProps {
   prompt: Prompt;
   viewMode: 'grid' | 'list';
   onClick: () => void;
-  onFavoriteClick: (e: React.MouseEvent) => void;
+  // onFavoriteClick: (e: React.MouseEvent) => void;
 }
 
 export default function PromptCard({
   prompt,
   viewMode,
   onClick,
-  onFavoriteClick,
+  // onFavoriteClick,
 }: PromptCardProps) {
   const { categories } = useCategories();
   
@@ -73,7 +73,7 @@ export default function PromptCard({
               </p>
             </div>
 
-            {/* Actions */}
+            {/* Actions - 주석처리됨
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 <Clock size={12} />
@@ -97,9 +97,10 @@ export default function PromptCard({
                 </button>
               </PermissionGuard>
             </div>
+            */}
           </div>
 
-          {/* Tags */}
+          {/* Tags - 제거됨
           <div className="flex flex-wrap gap-1 mt-2">
             {prompt.tags.slice(0, 3).map((tag) => (
               <span
@@ -110,6 +111,7 @@ export default function PromptCard({
               </span>
             ))}
           </div>
+          */}
         </div>
       </div>
     );
@@ -132,6 +134,7 @@ export default function PromptCard({
           {categoryConfig.label}
         </div>
         
+        {/* 즐겨찾기 버튼 - 주석처리됨
         <PermissionGuard permission="canUpdate">
           <button
             onClick={onFavoriteClick}
@@ -148,6 +151,7 @@ export default function PromptCard({
             />
           </button>
         </PermissionGuard>
+        */}
       </div>
 
       {/* Content */}
@@ -160,7 +164,7 @@ export default function PromptCard({
         </p>
       </div>
 
-      {/* Footer */}
+      {/* Footer - 제거됨 (사용시간, 태그)
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Clock size={12} />
@@ -181,6 +185,7 @@ export default function PromptCard({
           )}
         </div>
       </div>
+      */}
     </div>
   );
 }
