@@ -129,7 +129,6 @@ export default function NoticeCards() {
                   {card.type === 'usage' && (
                     <div className="mt-4 pt-4 border-t border-blue-200">
                       <div className="flex items-center text-sm font-medium gap-1">
-                        <span>프롬프트 라이브러리 둘러보기</span>
                         <ChevronRight className="w-4 h-4" />
                       </div>
                     </div>
