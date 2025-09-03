@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { BookOpen, GraduationCap, LogIn, LogOut, Crown, Eye } from 'lucide-react';
+import { BookOpen, Sparkles, GraduationCap, LogIn, LogOut, Crown, Eye } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from '@/components/auth/LoginModal';
 
@@ -60,10 +60,10 @@ export default function GlobalNavbar() {
           {/* 브랜드 로고 */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-              <BookOpen className="text-white" size={18} />
+              <Sparkles className="text-white" size={18} />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900"></h1>
+              <h1 className="text-lg font-bold text-gray-900">GQ-AI prompt</h1>
             </div>
           </div>
 
