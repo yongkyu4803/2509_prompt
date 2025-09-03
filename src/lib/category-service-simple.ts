@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { CategoryConfig } from './types';
+import { CategoryConfig } from './types-simple';
 
 export class SimpleCategoryService {
   // 📖 모든 카테고리 조회

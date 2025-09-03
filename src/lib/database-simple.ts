@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Prompt } from './types';
+import { Prompt } from './types-simple';
 
 // 익명 사용자 ID
 function getOrCreateUserId(): string {
@@ -32,7 +32,7 @@ export class SimplePromptService {
         color: item.category_info.color,
         bgColor: item.category_info.bg_color,
         borderColor: item.category_info.border_color,
-      } : null,
+      } : undefined,
       usageHours: item.usage_hours,
       isFavorite: item.is_favorite,
       tags: item.tags || [],
@@ -69,7 +69,13 @@ export class SimplePromptService {
       description: data.description || '',
       content: data.content,
       category: data.category,
-      categoryInfo: data.category_info,
+      categoryInfo: data.category_info ? {
+        id: data.category_info.id,
+        label: data.category_info.label,
+        color: data.category_info.color,
+        bgColor: data.category_info.bg_color,
+        borderColor: data.category_info.border_color,
+      } : undefined,
       usageHours: data.usage_hours,
       isFavorite: data.is_favorite,
       tags: data.tags || [],
@@ -111,7 +117,13 @@ export class SimplePromptService {
       description: data.description || '',
       content: data.content,
       category: data.category,
-      categoryInfo: data.category_info,
+      categoryInfo: data.category_info ? {
+        id: data.category_info.id,
+        label: data.category_info.label,
+        color: data.category_info.color,
+        bgColor: data.category_info.bg_color,
+        borderColor: data.category_info.border_color,
+      } : undefined,
       usageHours: data.usage_hours,
       isFavorite: data.is_favorite,
       tags: data.tags || [],
@@ -166,7 +178,13 @@ export class SimplePromptService {
       description: data.description || '',
       content: data.content,
       category: data.category,
-      categoryInfo: data.category_info,
+      categoryInfo: data.category_info ? {
+        id: data.category_info.id,
+        label: data.category_info.label,
+        color: data.category_info.color,
+        bgColor: data.category_info.bg_color,
+        borderColor: data.category_info.border_color,
+      } : undefined,
       usageHours: data.usage_hours,
       isFavorite: data.is_favorite,
       tags: data.tags || [],

@@ -115,8 +115,6 @@ async function convertCategoryToLegacy(categoryId: string): Promise<string> {
       '마케팅': 'marketing',
       '분석': 'analysis',
       '창작': 'creative',
-      '비즈니스': 'business',
-      '시각화': 'business',
       '아이데이션': 'creative', // 새로 추가된 카테고리를 creative로 매핑
     };
     
