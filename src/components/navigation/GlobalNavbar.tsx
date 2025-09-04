@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { BookOpen, Sparkles, GraduationCap, LogIn, LogOut, Crown, Eye } from 'lucide-react';
+import { BookOpen, Sparkles, GraduationCap, LogIn, LogOut, Crown, Eye, ExternalLink } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from '@/components/auth/LoginModal';
 
@@ -69,6 +69,16 @@ export default function GlobalNavbar() {
 
           {/* 네비게이션 탭과 권한 표시 */}
           <div className="flex items-center gap-4">
+            {/* AI Learning Platform 링크 */}
+            <a
+              href="https://gq-ai.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
+            >
+              <ExternalLink size={16} />
+              <span className="hidden sm:inline">AI Learning platform</span>
+            </a>
             {/* 권한 상태 표시 */}
             <div className="flex items-center gap-2">
               <div className={cn(
