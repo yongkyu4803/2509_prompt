@@ -69,16 +69,6 @@ export default function GlobalNavbar() {
 
           {/* 네비게이션 탭과 권한 표시 */}
           <div className="flex items-center gap-4">
-            {/* AI Learning Platform 링크 */}
-            <a
-              href="https://gq-ai.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
-            >
-              <ExternalLink size={16} />
-              <span className="hidden sm:inline">AI Learning platform</span>
-            </a>
             {/* 권한 상태 표시 */}
             <div className="flex items-center gap-2">
               <div className={cn(
@@ -163,6 +153,17 @@ export default function GlobalNavbar() {
                 );
               })}
             </div>
+
+            {/* AI Learning Platform 링크 */}
+            <a
+              href="https://gq-ai.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
+            >
+              <ExternalLink size={16} />
+              <span className="hidden sm:inline">AI Learning platform</span>
+            </a>
           </div>
         </div>
 
