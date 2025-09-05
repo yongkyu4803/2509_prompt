@@ -7,6 +7,7 @@ import { createCategoryOptions, DEFAULT_CATEGORY_OPTIONS } from '@/lib/constants
 import { cn } from '@/lib/utils';
 import { useCategories } from '@/contexts/CategoryContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useToast } from '@/components/ui/ToastContainer';
 
 interface AddPromptModalProps {
   isOpen: boolean;
@@ -19,7 +20,7 @@ interface AddPromptModalProps {
     tags: string[];
     usageHours: number;
     isFavorite: boolean;
-  }) => void;
+  }) => Promise<void>;
   initialData?: {
     title: string;
     description: string;
@@ -39,6 +40,7 @@ export default function AddPromptModal({
 }: AddPromptModalProps) {
   const { categories } = useCategories();
   const { hasPermission } = usePermissions();
+  const { showSuccess, showError } = useToast();
   
   // 권한 체크
   const canUpdate = hasPermission('canUpdate');
@@ -63,6 +65,8 @@ export default function AddPromptModal({
   const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccessfullySubmitted, setIsSuccessfullySubmitted] = useState(false);
 
   // initialData가 변경될 때만 formData 업데이트 (categoryOptions 의존성 제거)
   useEffect(() => {
@@ -78,12 +82,18 @@ export default function AddPromptModal({
       });
       setTagInput('');
       setErrors({});
+      setIsSuccessfullySubmitted(false); // 모달이 열릴 때 성공 상태 초기화
     }
   }, [isOpen, initialData]);
 
 
   // 폼 데이터 변경 여부 확인
   const hasChanges = () => {
+    // 성공적으로 저장된 경우 변경사항 없음으로 처리
+    if (isSuccessfullySubmitted) {
+      return false;
+    }
+    
     const originalData = {
       title: initialData?.title || '',
       description: initialData?.description || '',
@@ -115,19 +125,44 @@ export default function AddPromptModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     console.log('📝 AddPromptModal handleSubmit 호출됨');
     console.log('📋 현재 formData:', JSON.stringify(formData, null, 2));
     console.log('📋 initialData:', JSON.stringify(initialData, null, 2));
     
-    if (validateForm()) {
-      console.log('✅ 폼 검증 통과, onSave 호출 중...');
-      onSave(formData);
-      handleClose();
-    } else {
+    if (!validateForm()) {
       console.log('❌ 폼 검증 실패');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      console.log('✅ 폼 검증 통과, onSave 호출 중...');
+      await onSave(formData);
+      console.log('✅ onSave 완료, 모달 닫기');
+      
+      // 성공 토스트 표시
+      showSuccess(
+        initialData ? '프롬프트 수정 완료' : '프롬프트 추가 완료',
+        initialData ? '프롬프트가 성공적으로 수정되었습니다.' : '새로운 프롬프트가 추가되었습니다.'
+      );
+      
+      // 성공적으로 저장되었음을 표시
+      setIsSuccessfullySubmitted(true);
+      
+      handleClose();
+    } catch (error) {
+      console.error('❌ 저장 중 오류 발생:', error);
+      
+      // 에러 토스트 표시
+      showError(
+        initialData ? '프롬프트 수정 실패' : '프롬프트 추가 실패',
+        '다시 시도해 주세요. 문제가 계속되면 관리자에게 문의하세요.'
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -145,6 +180,7 @@ export default function AddPromptModal({
     setTagInput('');
     setErrors({});
     setShowCancelConfirm(false);
+    setIsSuccessfullySubmitted(false);
     onClose();
   };
 
@@ -220,7 +256,7 @@ export default function AddPromptModal({
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                disabled={isReadOnly}
+                disabled={isReadOnly || isSubmitting}
                 className={cn(
                   'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500',
                   errors.title ? 'border-red-300' : 'border-gray-300',
@@ -241,7 +277,7 @@ export default function AddPromptModal({
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value as PromptCategory })}
-                disabled={isReadOnly}
+                disabled={isReadOnly || isSubmitting}
                 className={cn(
                   "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500",
                   isReadOnly && 'bg-gray-50 cursor-not-allowed'
@@ -263,7 +299,7 @@ export default function AddPromptModal({
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                disabled={isReadOnly}
+                disabled={isReadOnly || isSubmitting}
                 rows={3}
                 className={cn(
                   'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none',
@@ -285,7 +321,7 @@ export default function AddPromptModal({
               <textarea
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                disabled={isReadOnly}
+                disabled={isReadOnly || isSubmitting}
                 rows={10}
                 className={cn(
                   'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none font-mono text-sm',
@@ -310,7 +346,7 @@ export default function AddPromptModal({
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  disabled={isReadOnly}
+                  disabled={isReadOnly || isSubmitting}
                   className={cn(
                     "flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500",
                     isReadOnly && 'bg-gray-50 cursor-not-allowed'
@@ -320,7 +356,7 @@ export default function AddPromptModal({
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  disabled={isReadOnly}
+                  disabled={isReadOnly || isSubmitting}
                   className={cn(
                     "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors",
                     isReadOnly && 'bg-gray-300 cursor-not-allowed hover:bg-gray-300'
@@ -360,7 +396,7 @@ export default function AddPromptModal({
                   type="checkbox"
                   checked={formData.isFavorite}
                   onChange={(e) => setFormData({ ...formData, isFavorite: e.target.checked })}
-                  disabled={isReadOnly}
+                  disabled={isReadOnly || isSubmitting}
                   className={cn(
                     "rounded text-purple-600 focus:ring-purple-500",
                     isReadOnly && 'cursor-not-allowed'
@@ -386,9 +422,23 @@ export default function AddPromptModal({
             {!isReadOnly && (
               <button
                 type="submit"
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                disabled={isSubmitting}
+                className={cn(
+                  "px-4 py-2 rounded-lg transition-colors flex items-center gap-2",
+                  isSubmitting
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-purple-600 hover:bg-purple-700 text-white"
+                )}
               >
-                {initialData ? '수정하기' : '추가하기'}
+                {isSubmitting && (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                )}
+                <span>
+                  {isSubmitting 
+                    ? (initialData ? '수정 중...' : '추가 중...') 
+                    : (initialData ? '수정하기' : '추가하기')
+                  }
+                </span>
               </button>
             )}
           </div>

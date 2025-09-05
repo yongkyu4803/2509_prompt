@@ -18,6 +18,7 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
   const [sortBy, setSortBy] = useState<SortBy>('latest');
   const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([]);
   const [localStoragePrompts] = useLocalStorage<Prompt[]>('prompts', mockPrompts);
+  const [lastRefreshTime, setLastRefreshTime] = useState<number>(Date.now());
 
   // 초기 데이터 로드 및 마이그레이션
   useEffect(() => {
@@ -26,11 +27,9 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
         setLoading(true);
         setError(null);
         
-        // 데이터베이스 테스트 실행 (개발 환경에서만)
-        // if (process.env.NODE_ENV === 'development') {
-        //   console.log('🧪 Running database tests...');
-        //   await runDatabaseTests();
-        // }
+        // 🔗 Supabase 연결 테스트
+        console.log('🔗 Supabase 연결 상태 테스트...');
+        await PromptService.testConnection();
         
         // Supabase에서 데이터 로드 시도
         console.log('📥 Supabase에서 프롬프트 데이터 로딩 중...');
@@ -59,6 +58,32 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
 
     initializeData();
   }, [localStoragePrompts]);
+
+  // 페이지 가시성 변화 시 데이터 새로고침 (새로고침 후 데이터 동기화)
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (!document.hidden && Date.now() - lastRefreshTime > 5000) { // 5초 이상 경과 시에만
+        try {
+          console.log('👀 페이지 포커스 복원 - 데이터 동기화 확인');
+          setLoading(true);
+          const refreshedPrompts = await PromptService.refreshPrompts();
+          setPrompts(refreshedPrompts);
+          setLastRefreshTime(Date.now());
+          console.log('✅ 페이지 포커스 복원 후 데이터 동기화 완료');
+        } catch (error) {
+          console.warn('⚠️ 페이지 포커스 복원 후 데이터 동기화 실패:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [lastRefreshTime]);
 
   // Filter and sort prompts based on search query, selected category, and sort option
   useEffect(() => {
@@ -140,63 +165,65 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const addPrompt = async (promptData: Omit<Prompt, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const addPrompt = async (promptData: Omit<Prompt, 'id' | 'createdAt' | 'updatedAt'>): Promise<void> => {
     try {
+      console.log('🚀 PromptContext.addPrompt 시작');
+      console.log('📋 추가할 프롬프트 데이터:', JSON.stringify(promptData, null, 2));
+      
+      // 데이터베이스에 먼저 저장
       const newPrompt = await PromptService.createPrompt(promptData);
-      setPrompts(prevPrompts => [newPrompt, ...prevPrompts]);
+      console.log('✅ PromptService.createPrompt 성공');
+      console.log('📤 생성된 프롬프트:', JSON.stringify(newPrompt, null, 2));
+      
+      // 저장 성공 후 전체 데이터 새로고침으로 확정적 상태 보장
+      console.log('🔄 프롬프트 추가 후 전체 데이터 새로고침');
+      const refreshedPrompts = await PromptService.refreshPrompts();
+      setPrompts(refreshedPrompts);
+      setLastRefreshTime(Date.now());
+      
+      console.log('✅ addPrompt 완료 - 확정적 상태 업데이트');
+      
     } catch (error) {
-      console.error('Failed to create prompt:', error);
+      console.error('❌ PromptContext.addPrompt 실패:', error);
       setError('프롬프트 추가에 실패했습니다.');
       
-      // Fallback to local creation
-      const fallbackPrompt: Prompt = {
-        ...promptData,
-        id: `local-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setPrompts(prevPrompts => [fallbackPrompt, ...prevPrompts]);
+      // 🔧 중요: 데이터베이스 오류 시 로컬 폴백을 하지 않고 바로 에러를 던집니다
+      // 사용자가 저장되었다고 착각하지 않도록 합니다
+      console.log('🚨 데이터베이스 저장 실패 - 로컬 폴백 없이 에러 전파');
+      
+      // 에러를 다시 throw하여 호출자가 에러를 처리할 수 있게 함
+      throw error;
     }
   };
 
-  const updatePrompt = async (id: string, updates: Partial<Prompt>) => {
+  const updatePrompt = async (id: string, updates: Partial<Prompt>): Promise<void> => {
     try {
       console.log('🚀 PromptContext.updatePrompt 시작');
       console.log('📋 업데이트 ID:', id);
       console.log('📋 업데이트 데이터:', JSON.stringify(updates, null, 2));
       
+      // 데이터베이스에 먼저 업데이트
       const updatedPrompt = await PromptService.updatePrompt(id, updates);
       console.log('✅ PromptService 업데이트 성공');
       console.log('📤 업데이트된 프롬프트:', JSON.stringify(updatedPrompt, null, 2));
       
-      setPrompts(prevPrompts => {
-        console.log('🔄 상태 업데이트 중...');
-        const beforeUpdate = prevPrompts.find(p => p.id === id);
-        console.log('📋 업데이트 전 데이터:', beforeUpdate ? JSON.stringify(beforeUpdate, null, 2) : 'null');
-        
-        const newPrompts = prevPrompts.map(prompt =>
-          prompt.id === id ? updatedPrompt : prompt
-        );
-        
-        const afterUpdate = newPrompts.find(p => p.id === id);
-        console.log('📋 업데이트 후 데이터:', afterUpdate ? JSON.stringify(afterUpdate, null, 2) : 'null');
-        console.log('✅ 프롬프트 상태 업데이트 완료');
-        
-        return newPrompts;
-      });
+      // 업데이트 성공 후 전체 데이터 새로고침으로 확정적 상태 보장
+      console.log('🔄 프롬프트 업데이트 후 전체 데이터 새로고침');
+      const refreshedPrompts = await PromptService.refreshPrompts();
+      setPrompts(refreshedPrompts);
+      setLastRefreshTime(Date.now());
+      
+      console.log('✅ updatePrompt 완료 - 확정적 상태 업데이트');
+      
     } catch (error) {
       console.error('❌ PromptContext.updatePrompt 실패:', error);
       setError('프롬프트 수정에 실패했습니다.');
       
-      // Fallback to local update
-      console.log('🔄 로컬 업데이트로 폴백...');
-      setPrompts(prevPrompts =>
-        prevPrompts.map(prompt =>
-          prompt.id === id
-            ? { ...prompt, ...updates, updatedAt: new Date().toISOString() }
-            : prompt
-        )
-      );
+      // 🔧 중요: 데이터베이스 오류 시 로컬 폴백을 하지 않고 바로 에러를 던집니다
+      console.log('🚨 데이터베이스 수정 실패 - 로컬 폴백 없이 에러 전파');
+      
+      // 에러를 다시 throw하여 호출자가 에러를 처리할 수 있게 함
+      throw error;
     }
   };
 

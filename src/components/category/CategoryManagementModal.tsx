@@ -32,11 +32,16 @@ const COLOR_OPTIONS = [
 ];
 
 export default function CategoryManagementModal({ isOpen, onClose }: CategoryManagementModalProps) {
+  // 모달이 닫혀있으면 조기 반환으로 불필요한 렌더링 방지
+  if (!isOpen) return null;
+  
   const { categories, loading, addCategory, updateCategory, deleteCategory } = useCategories();
   
-  console.log('CategoryManagementModal - isOpen:', isOpen);
-  console.log('CategoryManagementModal - categories:', categories);
-  console.log('CategoryManagementModal - loading:', loading);
+  // 디버깅: 모달이 열린 상태에서만 로그 출력
+  console.log('🔧 CategoryManagementModal 열림 - isOpen:', isOpen);
+  console.log('🔧 CategoryManagementModal 열림 - categories:', categories);
+  console.log('🔧 CategoryManagementModal 열림 - loading:', loading);
+  
   const [editingCategory, setEditingCategory] = useState<CategoryConfig | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formData, setFormData] = useState<CategoryFormData>({
@@ -138,8 +143,6 @@ export default function CategoryManagementModal({ isOpen, onClose }: CategoryMan
       }
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div

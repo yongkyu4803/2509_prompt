@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import LevelPromptGrid from '@/components/prompt/LevelPromptGrid';
@@ -41,6 +41,11 @@ export default function Home() {
   const [editingPrompt, setEditingPrompt] = useState<Prompt | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [isCategoryManagementOpen, setIsCategoryManagementOpen] = useState(false);
+
+  // 디버깅을 위한 상태 변경 감지
+  useEffect(() => {
+    console.log('🔧 isCategoryManagementOpen 상태 변경:', isCategoryManagementOpen);
+  }, [isCategoryManagementOpen]);
 
   // Get prompts based on active menu
   const getDisplayPrompts = () => {
@@ -179,8 +184,10 @@ export default function Home() {
         onViewModeChange={setViewMode}
         onSortChange={setSortBy}
         onCategoryManagementOpen={() => {
-          console.log('카테고리 관리 모달 열기 시도');
+          console.log('🔧 카테고리 관리 모달 열기 시도');
+          console.log('🔧 현재 isCategoryManagementOpen 상태:', isCategoryManagementOpen);
           setIsCategoryManagementOpen(true);
+          console.log('🔧 setIsCategoryManagementOpen(true) 호출 완료');
         }}
       >
         <NoticeCards />

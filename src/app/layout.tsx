@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PromptProvider } from "@/contexts/PromptContext";
 import { CategoryProvider } from "@/contexts/CategoryContext";
+import { ToastProvider } from "@/components/ui/ToastContainer";
 import GlobalNavbar from "@/components/navigation/GlobalNavbar";
 
 const geistSans = Geist({
@@ -34,10 +35,12 @@ export default function RootLayout({
         <AuthProvider>
           <CategoryProvider>
             <PromptProvider>
-              <GlobalNavbar />
-              <main className="min-h-screen bg-gray-50">
-                {children}
-              </main>
+              <ToastProvider>
+                <GlobalNavbar />
+                <main className="min-h-screen bg-gray-50">
+                  {children}
+                </main>
+              </ToastProvider>
             </PromptProvider>
           </CategoryProvider>
         </AuthProvider>
