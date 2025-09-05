@@ -301,10 +301,7 @@ export class PromptService {
       console.log('📤 Supabase로 전송할 데이터:', JSON.stringify(supabaseData, null, 2));
       
       // Supabase 연결 상태 확인
-      console.log('🔗 Supabase 클라이언트 확인:', {
-        supabaseUrl: supabase.supabaseUrl,
-        supabaseKey: supabase.supabaseKey ? '***설정됨***' : '❌ 없음',
-      });
+      console.log('🔗 Supabase 클라이언트 준비 완료');
 
       const { data, error } = await supabase
         .from('prompts')
