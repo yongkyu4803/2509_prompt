@@ -24,9 +24,7 @@ const noticeCards: NoticeCard[] = [
 • 기본 프롬프트 선택 → 세부사항 추가
 • 구체적인 요구사항과 맥락 포함
 • 예시 제공으로 더 정확한 결과 획득
-• 복잡한 작업은 단계별 조합 활용
-
-💡 팁: 복사 후 자신만의 내용 추가!`,
+• 복잡한 작업은 단계별 조합 활용`,
     icon: <Lightbulb className="w-5 h-5" />,
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-200',
@@ -36,7 +34,7 @@ const noticeCards: NoticeCard[] = [
     id: 'admin-notice',
     type: 'admin',
     title: '관리자 공지사항',
-    content: '🎉 새로운 프롬프트 카테고리 추가!\n\n📝 새 카테고리:\n• 보도자료: 언론 보도용 콘텐츠\n• 이슈분석: 현안 분석 리포트\n• 질의서작성: 공식 문서 작성\n• 시각화: 데이터 차트 생성\n\n더욱 체계적인 프롬프트 관리를 경험해보세요!',
+    content: '📝 새 카테고리:\n• 보도자료: 언론 보도용 콘텐츠\n• 이슈분석: 현안 분석 리포트\n• 질의서작성: 공식 문서 작성\n\n더욱 체계적인 프롬프트 관리를 경험해보세요!',
     icon: <Bell className="w-5 h-5" />,
     bgColor: 'bg-amber-50',
     borderColor: 'border-amber-200',
@@ -126,13 +124,6 @@ export default function NoticeCards() {
                     </div>
                   )}
 
-                  {card.type === 'usage' && (
-                    <div className="mt-4 pt-4 border-t border-blue-200">
-                      <div className="flex items-center text-sm font-medium gap-1">
-                        <ChevronRight className="w-4 h-4" />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             )}

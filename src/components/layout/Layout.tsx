@@ -7,32 +7,32 @@ import { PromptCategory, SortBy } from '@/lib/types';
 interface LayoutProps {
   activeMenu: string;
   searchQuery: string;
-  selectedCategory: PromptCategory | 'all';
+  /* CATEGORY_DISABLED: selectedCategory: PromptCategory | 'all'; */
   viewMode: 'grid' | 'list';
   sortBy: SortBy;
   totalPrompts: number;
   onMenuChange: (menu: string) => void;
   onSearchChange: (query: string) => void;
-  onCategoryChange: (category: PromptCategory | 'all') => void;
+  /* CATEGORY_DISABLED: onCategoryChange: (category: PromptCategory | 'all') => void; */
   onViewModeChange: (mode: 'grid' | 'list') => void;
   onSortChange: (sortBy: SortBy) => void;
-  onCategoryManagementOpen?: () => void;
+  /* CATEGORY_DISABLED: onCategoryManagementOpen?: () => void; */
   children: React.ReactNode;
 }
 
 export default function Layout({
   activeMenu,
   searchQuery,
-  selectedCategory,
+  /* CATEGORY_DISABLED: selectedCategory, */
   viewMode,
   sortBy,
   totalPrompts,
   onMenuChange,
   onSearchChange,
-  onCategoryChange,
+  /* CATEGORY_DISABLED: onCategoryChange, */
   onViewModeChange,
   onSortChange,
-  onCategoryManagementOpen,
+  /* CATEGORY_DISABLED: onCategoryManagementOpen, */
   children,
 }: LayoutProps) {
   return (
@@ -43,17 +43,17 @@ export default function Layout({
             activeMenu={activeMenu} 
             onMenuChange={onMenuChange} 
             totalPrompts={totalPrompts}
-            onCategoryManagementOpen={onCategoryManagementOpen}
+            // CATEGORY_DISABLED: onCategoryManagementOpen={onCategoryManagementOpen}
           />
           
           <div className="flex-1 flex flex-col lg:ml-0">
             <Header
               searchQuery={searchQuery}
-              selectedCategory={selectedCategory}
+              // CATEGORY_DISABLED: selectedCategory={selectedCategory}
               viewMode={viewMode}
               sortBy={sortBy}
               onSearchChange={onSearchChange}
-              onCategoryChange={onCategoryChange}
+              // CATEGORY_DISABLED: onCategoryChange={onCategoryChange}
               onViewModeChange={onViewModeChange}
               onSortChange={onSortChange}
             />

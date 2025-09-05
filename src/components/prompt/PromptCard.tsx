@@ -2,11 +2,11 @@
 
 // import { Star, Clock } from 'lucide-react';
 import { Prompt } from '@/lib/types';
-import { findCategoryConfig, LEGACY_CATEGORY_CONFIG } from '@/lib/constants';
+/* CATEGORY_DISABLED: import { findCategoryConfig, LEGACY_CATEGORY_CONFIG } from '@/lib/constants'; */
 import { cn } from '@/lib/utils';
 // import { PermissionGuard } from '@/components/auth/PermissionGuard';
-import { useCategories } from '@/contexts/CategoryContext';
-import { useMemo } from 'react';
+/* CATEGORY_DISABLED: import { useCategories } from '@/contexts/CategoryContext'; */
+/* CATEGORY_DISABLED: import { useMemo } from 'react'; */
 
 interface PromptCardProps {
   prompt: Prompt;
@@ -21,6 +21,7 @@ export default function PromptCard({
   onClick,
   // onFavoriteClick,
 }: PromptCardProps) {
+  /* CATEGORY_DISABLED: 
   const { categories } = useCategories();
   
   // 🔧 수정: useMemo로 카테고리 변경 시 재계산 보장
@@ -43,6 +44,7 @@ export default function PromptCard({
     console.log('📋 PromptCard 최종 카테고리 설정:', config);
     return config;
   }, [categories, prompt.category, prompt.id]);
+  */
 
   if (viewMode === 'list') {
     return (
@@ -50,7 +52,7 @@ export default function PromptCard({
         onClick={onClick}
         className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
       >
-        {/* Category Badge */}
+        {/* CATEGORY_DISABLED: Category Badge
         <div
           className={cn(
             'flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium',
@@ -60,6 +62,7 @@ export default function PromptCard({
         >
           {categoryConfig.label}
         </div>
+        */}
 
         {/* Content */}
         <div className="flex-1 min-w-0">
@@ -122,8 +125,8 @@ export default function PromptCard({
       onClick={onClick}
       className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all cursor-pointer group"
     >
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      {/* CATEGORY_DISABLED: Header */}
+      {/* <div className="flex items-start justify-between mb-4">
         <div
           className={cn(
             'px-3 py-1 rounded-full text-xs font-medium',
@@ -134,7 +137,6 @@ export default function PromptCard({
           {categoryConfig.label}
         </div>
         
-        {/* 즐겨찾기 버튼 - 주석처리됨
         <PermissionGuard permission="canUpdate">
           <button
             onClick={onFavoriteClick}
@@ -151,8 +153,7 @@ export default function PromptCard({
             />
           </button>
         </PermissionGuard>
-        */}
-      </div>
+      </div> */}
 
       {/* Content */}
       <div className="mb-4">

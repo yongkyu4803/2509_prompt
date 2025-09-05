@@ -19,14 +19,14 @@ export interface PromptContextType {
   prompts: Prompt[];
   filteredPrompts: Prompt[];
   searchQuery: string;
-  selectedCategory: PromptCategory | 'all';
+  /* CATEGORY_DISABLED: selectedCategory: PromptCategory | 'all'; */
   viewMode: 'grid' | 'list';
   sortBy: SortBy;
   loading: boolean;
   error: string | null;
   clearError: () => void;
   setSearchQuery: (query: string) => void;
-  setSelectedCategory: (category: PromptCategory | 'all') => void;
+  /* CATEGORY_DISABLED: setSelectedCategory: (category: PromptCategory | 'all') => void; */
   setViewMode: (mode: 'grid' | 'list') => void;
   setSortBy: (sortBy: SortBy) => void;
   toggleFavorite: (id: string) => Promise<void>;

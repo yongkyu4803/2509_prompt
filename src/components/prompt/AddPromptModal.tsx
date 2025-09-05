@@ -57,7 +57,7 @@ export default function AddPromptModal({
     title: initialData?.title || '',
     description: initialData?.description || '',
     content: initialData?.content || '',
-    category: initialData?.category || 'development' as PromptCategory,
+    category: 'development' as PromptCategory, /* CATEGORY_DISABLED: initialData?.category || */
     tags: initialData?.tags || [],
     usageHours: initialData?.usageHours || 0,
     isFavorite: initialData?.isFavorite || false,
@@ -98,7 +98,7 @@ export default function AddPromptModal({
       title: initialData?.title || '',
       description: initialData?.description || '',
       content: initialData?.content || '',
-      category: initialData?.category || 'development' as PromptCategory,
+      category: 'development' as PromptCategory, /* CATEGORY_DISABLED: initialData?.category || */
       tags: initialData?.tags || [],
       usageHours: initialData?.usageHours || 0,
       isFavorite: initialData?.isFavorite || false,

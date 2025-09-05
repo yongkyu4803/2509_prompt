@@ -40,12 +40,14 @@ export default function Home() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingPrompt, setEditingPrompt] = useState<Prompt | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  /* CATEGORY_DISABLED: 
   const [isCategoryManagementOpen, setIsCategoryManagementOpen] = useState(false);
 
   // 디버깅을 위한 상태 변경 감지
   useEffect(() => {
     console.log('🔧 isCategoryManagementOpen 상태 변경:', isCategoryManagementOpen);
   }, [isCategoryManagementOpen]);
+  */
 
   // Get prompts based on active menu
   const getDisplayPrompts = () => {
@@ -174,21 +176,21 @@ export default function Home() {
       <Layout
         activeMenu={activeMenu}
         searchQuery={searchQuery}
-        selectedCategory={selectedCategory}
+        // CATEGORY_DISABLED: selectedCategory={selectedCategory}
         viewMode={viewMode}
         sortBy={sortBy}
         totalPrompts={prompts.length}
         onMenuChange={handleMenuChange}
         onSearchChange={setSearchQuery}
-        onCategoryChange={setSelectedCategory}
+        // CATEGORY_DISABLED: onCategoryChange={setSelectedCategory}
         onViewModeChange={setViewMode}
         onSortChange={setSortBy}
-        onCategoryManagementOpen={() => {
-          console.log('🔧 카테고리 관리 모달 열기 시도');
-          console.log('🔧 현재 isCategoryManagementOpen 상태:', isCategoryManagementOpen);
-          setIsCategoryManagementOpen(true);
-          console.log('🔧 setIsCategoryManagementOpen(true) 호출 완료');
-        }}
+        // CATEGORY_DISABLED: onCategoryManagementOpen={() => {
+        //   console.log('🔧 카테고리 관리 모달 열기 시도');
+        //   console.log('🔧 현재 isCategoryManagementOpen 상태:', isCategoryManagementOpen);
+        //   setIsCategoryManagementOpen(true);
+        //   console.log('🔧 setIsCategoryManagementOpen(true) 호출 완료');
+        // }}
       >
         <NoticeCards />
         <LevelPromptGrid
@@ -270,11 +272,11 @@ export default function Home() {
         </div>
       )}
 
-      {/* Category Management Modal */}
-      <CategoryManagementModal
+      {/* CATEGORY_DISABLED: Category Management Modal */}
+      {/* <CategoryManagementModal
         isOpen={isCategoryManagementOpen}
         onClose={() => setIsCategoryManagementOpen(false)}
-      />
+      /> */}
     </>
   );
 }

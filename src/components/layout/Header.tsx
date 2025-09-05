@@ -9,31 +9,33 @@ import { useCategories } from '@/contexts/CategoryContext';
 
 interface HeaderProps {
   searchQuery: string;
-  selectedCategory: PromptCategory | 'all';
+  /* CATEGORY_DISABLED: selectedCategory: PromptCategory | 'all'; */
   viewMode: 'grid' | 'list';
   sortBy: SortBy;
   onSearchChange: (query: string) => void;
-  onCategoryChange: (category: PromptCategory | 'all') => void;
+  /* CATEGORY_DISABLED: onCategoryChange: (category: PromptCategory | 'all') => void; */
   onViewModeChange: (mode: 'grid' | 'list') => void;
   onSortChange: (sortBy: SortBy) => void;
 }
 
 export default function Header({
   searchQuery,
-  selectedCategory,
+  /* CATEGORY_DISABLED: selectedCategory, */
   viewMode,
   sortBy,
   onSearchChange,
-  onCategoryChange,
+  /* CATEGORY_DISABLED: onCategoryChange, */
   onViewModeChange,
   onSortChange,
 }: HeaderProps) {
+  /* CATEGORY_DISABLED: 
   const { categories } = useCategories();
   
   // 카테고리 옵션 생성 (로딩 중이면 기본 옵션 사용)
   const categoryOptions = (categories && categories.length > 0) 
     ? createCategoryOptions(categories) 
     : DEFAULT_CATEGORY_OPTIONS;
+  */
 
   // 정렬 옵션
   const sortOptions = [
@@ -64,7 +66,7 @@ export default function Header({
 
         {/* Filters and View Toggle */}
         <div className="flex items-center gap-4">
-          {/* Category Filter */}
+          {/* CATEGORY_DISABLED: Category Filter
           <div className="relative">
             <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             <select
@@ -79,6 +81,7 @@ export default function Header({
               ))}
             </select>
           </div>
+          */}
 
           {/* Sort Filter */}
           <div className="relative">

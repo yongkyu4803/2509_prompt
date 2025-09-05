@@ -13,7 +13,7 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<PromptCategory | 'all'>('all');
+  /* CATEGORY_DISABLED: const [selectedCategory, setSelectedCategory] = useState<PromptCategory | 'all'>('all'); */
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<SortBy>('latest');
   const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([]);
@@ -89,10 +89,11 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let filtered = prompts;
 
-    // Filter by category
+    /* CATEGORY_DISABLED: Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(prompt => prompt.category === selectedCategory);
     }
+    */
 
     // Filter by search query
     if (searchQuery.trim()) {
@@ -131,7 +132,7 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
     });
 
     setFilteredPrompts(sortedFiltered);
-  }, [prompts, searchQuery, selectedCategory, sortBy]);
+  }, [prompts, searchQuery, /* CATEGORY_DISABLED: selectedCategory, */ sortBy]);
 
   const toggleFavorite = async (id: string) => {
     try {
@@ -260,14 +261,14 @@ export function PromptProvider({ children }: { children: React.ReactNode }) {
     prompts,
     filteredPrompts,
     searchQuery,
-    selectedCategory,
+    /* CATEGORY_DISABLED: selectedCategory, */
     viewMode,
     sortBy,
     loading,
     error,
     clearError,
     setSearchQuery,
-    setSelectedCategory,
+    /* CATEGORY_DISABLED: setSelectedCategory, */
     setViewMode,
     setSortBy,
     toggleFavorite,

@@ -11,7 +11,7 @@ interface SidebarProps {
   activeMenu: string;
   onMenuChange: (menu: string) => void;
   totalPrompts: number;
-  onCategoryManagementOpen?: () => void;
+  /* CATEGORY_DISABLED: onCategoryManagementOpen?: () => void; */
 }
 
 const menuItems = [
@@ -20,7 +20,7 @@ const menuItems = [
   { id: 'add', label: '프롬프트 추가', icon: Plus },
 ];
 
-export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, onCategoryManagementOpen }: SidebarProps) {
+export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, /* CATEGORY_DISABLED: onCategoryManagementOpen */ }: SidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const toggleMobile = () => setIsMobileOpen(!isMobileOpen);
@@ -121,8 +121,8 @@ export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, onCate
               })}
             </ul>
 
-            {/* 관리자 전용 설정 */}
-            <PermissionGuard permission="canCreate">
+            {/* CATEGORY_DISABLED: 관리자 전용 설정 */}
+            {/* <PermissionGuard permission="canCreate">
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">관리</h3>
                 <button
@@ -136,7 +136,7 @@ export default function Sidebar({ activeMenu, onMenuChange, totalPrompts, onCate
                   <span className="font-medium">카테고리 관리</span>
                 </button>
               </div>
-            </PermissionGuard>
+            </PermissionGuard> */}
           </nav>
 
           {/* Contact Section */}
