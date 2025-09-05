@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import LevelPromptGrid from '@/components/prompt/LevelPromptGrid';
 import PromptModal from '@/components/prompt/PromptModal';
 import AddPromptModal from '@/components/prompt/AddPromptModal';
-import CategoryManagementModal from '@/components/category/CategoryManagementModal';
 import NoticeCards from '@/components/notice/NoticeCards';
 import { usePrompts } from '@/contexts/PromptContext';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -17,17 +16,14 @@ export default function Home() {
     prompts,
     filteredPrompts,
     searchQuery,
-    selectedCategory,
     viewMode,
     sortBy,
     loading,
     error,
     clearError,
     setSearchQuery,
-    setSelectedCategory,
     setViewMode,
     setSortBy,
-    toggleFavorite,
     addPrompt,
     updatePrompt,
     deletePrompt,

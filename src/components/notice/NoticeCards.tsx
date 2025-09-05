@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bell, ChevronRight, Lightbulb, ChevronUp, ChevronDown } from 'lucide-react';
+import { Bell, Lightbulb, ChevronUp, ChevronDown } from 'lucide-react';
 
 interface NoticeCard {
   id: string;
