@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Chapter } from '@/types/study';
 import ChapterCard from '@/components/study/ChapterCard';
+import ChapterNavigation from '@/components/study/ChapterNavigation';
 import { BookOpen, Clock } from 'lucide-react';
 
 export default function StudyPage() {
@@ -43,17 +44,21 @@ export default function StudyPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* 헤더 섹션 */}
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-6">
-          <BookOpen className="w-8 h-8 text-purple-600" />
-        </div>
+      <div className="text-center mb-2">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          프롬프트 엔지니어링 스터디
+          생성형 AI와 함께하는 국정감사 핸드북
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          생성형 AI를 활용한 국정감사 업무 효율화를 위한 실무 가이드입니다. 
+          생성형 AI를 활용한 국정감사 업무 효율화를 위한 실무 가이드입니다.
+        </p>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           체계적인 학습을 통해 프롬프트 엔지니어링 전문가가 되어보세요.
         </p>
+      </div>
+
+      {/* 챕터 네비게이션 */}
+      <div className="mb-12">
+        <ChapterNavigation />
       </div>
 
       {/* 챕터 목록 */}
@@ -77,17 +82,6 @@ export default function StudyPage() {
           </p>
         </div>
       )}
-
-      {/* 하단 정보 */}
-      <div className="text-center text-sm text-gray-500 mt-16 pt-8 border-t border-gray-200">
-        <div className="flex items-center justify-center gap-1 mb-2">
-          <Clock size={14} />
-          <span>전체 예상 학습 시간: {chapters.reduce((total, chapter) => total + chapter.readingTime, 0)}분</span>
-        </div>
-        <p>
-          체계적인 학습을 통해 프롬프트 엔지니어링 전문가가 되어보세요.
-        </p>
-      </div>
     </div>
   );
 }

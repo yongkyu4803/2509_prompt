@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Chapter, StudyProgress, TableOfContentsItem } from '@/types/study';
 import MarkdownRenderer from '@/components/markdown/MarkdownRenderer';
 import TableOfContents from '@/components/study/TableOfContents';
+import ChapterNavigation from '@/components/study/ChapterNavigation';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -64,16 +65,10 @@ export default function ChapterDetailClient({ chapter, adjacentChapters, toc }: 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* 브레드크럼 네비게이션 */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-        <Link href="/study" className="hover:text-purple-600 transition-colors">
-          스터디
-        </Link>
-        <span>/</span>
-        <span>Chapter {chapter.frontmatter.chapter}</span>
-        <span>/</span>
-        <span className="text-gray-900 font-medium">{chapter.frontmatter.title}</span>
-      </nav>
+      {/* 챕터 네비게이션 */}
+      <div className="mb-8">
+        <ChapterNavigation currentChapterId={chapter.id} />
+      </div>
 
       <div className="max-w-4xl mx-auto">
         {/* 마크다운 콘텐츠 */}
