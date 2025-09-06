@@ -75,101 +75,43 @@ export default function ChapterDetailClient({ chapter, adjacentChapters, toc }: 
         <span className="text-gray-900 font-medium">{chapter.frontmatter.title}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* 사이드바 */}
-        <div className="lg:col-span-1 space-y-6">
-          {/* 챕터 정보 */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-bold">
-                {chapter.frontmatter.chapter}
-              </div>
-              <div>
-                <h2 className="font-semibold text-gray-900">Chapter {chapter.frontmatter.chapter}</h2>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Clock size={14} />
-                  <span>{chapter.readingTime}분</span>
-                </div>
-              </div>
-            </div>
-            
-            <button
-              onClick={handleMarkComplete}
-              className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                isCompleted
-                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                  : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-              }`}
-            >
-              {isCompleted ? (
-                <>
-                  <CheckCircle size={16} />
-                  완료됨
-                </>
-              ) : (
-                <>
-                  <Circle size={16} />
-                  완료로 표시
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* 목차 */}
-          {toc.length > 0 && (
-            <TableOfContents items={toc} />
-          )}
+      <div className="max-w-4xl mx-auto">
+        {/* 마크다운 콘텐츠 */}
+        <div className="bg-white rounded-xl border border-gray-200 p-8 mb-8">
+          <MarkdownRenderer htmlContent={chapter.htmlContent} />
         </div>
 
-        {/* 메인 콘텐츠 */}
-        <div className="lg:col-span-3">
-          {/* 챕터 헤더 */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              {chapter.frontmatter.title}
-            </h1>
-            <p className="text-lg text-gray-600">
-              {chapter.frontmatter.description}
-            </p>
-          </div>
+        {/* 네비게이션 */}
+        <div className="flex items-center justify-between">
+          {adjacentChapters.prev ? (
+            <button
+              onClick={() => navigateToChapter(adjacentChapters.prev!.slug)}
+              className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors"
+            >
+              <ArrowLeft size={16} />
+              <div className="text-left">
+                <div className="text-sm text-gray-500">이전 챕터</div>
+                <div className="font-medium">{adjacentChapters.prev.frontmatter.title}</div>
+              </div>
+            </button>
+          ) : (
+            <div></div>
+          )}
 
-          {/* 마크다운 콘텐츠 */}
-          <div className="bg-white rounded-xl border border-gray-200 p-8 mb-8">
-            <MarkdownRenderer htmlContent={chapter.htmlContent} />
-          </div>
-
-          {/* 네비게이션 */}
-          <div className="flex items-center justify-between">
-            {adjacentChapters.prev ? (
-              <button
-                onClick={() => navigateToChapter(adjacentChapters.prev!.slug)}
-                className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors"
-              >
-                <ArrowLeft size={16} />
-                <div className="text-left">
-                  <div className="text-sm text-gray-500">이전 챕터</div>
-                  <div className="font-medium">{adjacentChapters.prev.frontmatter.title}</div>
-                </div>
-              </button>
-            ) : (
-              <div></div>
-            )}
-
-            {adjacentChapters.next ? (
-              <button
-                onClick={() => navigateToChapter(adjacentChapters.next!.slug)}
-                className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors text-right"
-              >
-                <div className="text-right">
-                  <div className="text-sm text-gray-500">다음 챕터</div>
-                  <div className="font-medium">{adjacentChapters.next.frontmatter.title}</div>
-                </div>
-                <ArrowRight size={16} />
-              </button>
-            ) : (
-              <div></div>
-            )}
-          </div>
+          {adjacentChapters.next ? (
+            <button
+              onClick={() => navigateToChapter(adjacentChapters.next!.slug)}
+              className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors text-right"
+            >
+              <div className="text-right">
+                <div className="text-sm text-gray-500">다음 챕터</div>
+                <div className="font-medium">{adjacentChapters.next.frontmatter.title}</div>
+              </div>
+              <ArrowRight size={16} />
+            </button>
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
     </div>

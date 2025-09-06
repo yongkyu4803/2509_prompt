@@ -81,7 +81,7 @@ body {
 }
 
 .prose h2 {
-  color: rgb(17 24 39); /* gray-900 */
+  color: #1e40af; /* blue-800 - 진한 파란색 */
   font-weight: 700;
   font-size: 1.5em;
   margin-top: 2em;
@@ -91,7 +91,7 @@ body {
 }
 
 .prose h3 {
-  color: rgb(17 24 39); /* gray-900 */
+  color: #6b21a8; /* purple-800 - 진한 보라색 */
   font-weight: 600;
   font-size: 1.25em;
   margin-top: 1.6em;
@@ -142,6 +142,61 @@ body {
 
 .prose ol > li::marker {
   color: rgb(124 58 237); /* purple-600 */
+}
+
+/* Code block improvements */
+.prose pre {
+  background-color: #f0f4f8; /* 연한 블루 톤 */
+  border: 1px solid #cbd5e0; /* 블루 그레이 보더 */
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  color: #2d3748; /* 다크 그레이 텍스트 */
+  margin: 1.5em 0;
+  white-space: pre-wrap; /* 공백 처리 방식 변경 */
+}
+
+.prose pre code {
+  background-color: transparent; /* 코드 블록 내부 code 태그는 배경 투명 */
+  padding: 0; /* 중복 패딩 제거 */
+  white-space: pre-wrap; /* 공백과 줄바꿈 유지하면서 래핑 허용 */
+  text-indent: 0; /* 들여쓰기 제거 */
+}
+
+.prose code {
+  background-color: #f0f4f8; /* 연한 블루 톤 */
+  color: #2d3748; /* 다크 그레이 텍스트 */
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+/* Blockquote improvements */
+.prose blockquote {
+  border-left: 4px solid #3b82f6; /* 블루 톤 보더 */
+  background-color: #f8fafc; /* 연한 배경 */
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0.375rem;
+  font-style: normal; /* 기울임체 제거 */
+  color: rgb(55 65 81); /* gray-700 */
+  text-indent: 0 !important; /* 첫 줄 들여쓰기 강제 제거 */
+}
+
+.prose blockquote p {
+  margin: 0 !important;
+  text-indent: 0 !important; /* 첫 줄 들여쓰기 강제 제거 */
+  line-height: 1.75;
+  padding-left: 0 !important; /* 왼쪽 패딩 제거 */
+}
+
+.prose blockquote p:first-child {
+  text-indent: 0 !important;
+  margin-top: 0 !important;
+}
+
+.prose blockquote * {
+  text-indent: 0 !important; /* 모든 하위 요소의 들여쓰기 제거 */
 }
 
 /* Table improvements */
