@@ -2,11 +2,11 @@
 
 // import { Star, Clock } from 'lucide-react';
 import { Prompt } from '@/lib/types';
-/* CATEGORY_DISABLED: import { findCategoryConfig, LEGACY_CATEGORY_CONFIG } from '@/lib/constants'; */
+import { findCategoryConfig, LEGACY_CATEGORY_CONFIG } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 // import { PermissionGuard } from '@/components/auth/PermissionGuard';
-/* CATEGORY_DISABLED: import { useCategories } from '@/contexts/CategoryContext'; */
-/* CATEGORY_DISABLED: import { useMemo } from 'react'; */
+import { useCategories } from '@/contexts/CategoryContext';
+import { useMemo } from 'react';
 
 interface PromptCardProps {
   prompt: Prompt;
@@ -21,17 +21,10 @@ export default function PromptCard({
   onClick,
   // onFavoriteClick,
 }: PromptCardProps) {
-  /* CATEGORY_DISABLED: 
   const { categories } = useCategories();
   
-  // 🔧 수정: useMemo로 카테고리 변경 시 재계산 보장
+  // 카테고리 설정과 그라디에이션 매핑
   const categoryConfig = useMemo(() => {
-    console.log('🎯 PromptCard 카테고리 계산:', { 
-      promptId: prompt.id,
-      promptCategory: prompt.category,
-      categoriesLength: categories?.length || 0
-    });
-    
     const config = findCategoryConfig(categories || [], prompt.category) || 
       LEGACY_CATEGORY_CONFIG[prompt.category] || {
         label: prompt.category,
@@ -40,11 +33,50 @@ export default function PromptCard({
         borderColor: 'border-gray-200',
         isDefault: false,
       };
-      
-    console.log('📋 PromptCard 최종 카테고리 설정:', config);
     return config;
   }, [categories, prompt.category, prompt.id]);
-  */
+
+  // LEVEL_TAG_DISABLED: 레벨 태그 결정 함수
+  /* const getLevelTag = (prompt: Prompt) => {
+    const title = prompt.title.toLowerCase();
+    const category = prompt.category.toLowerCase();
+    
+    // 카테고리 기반 레벨 결정
+    if (category.includes('기초') || category.includes('basic') || category.includes('입문')) {
+      return '[초급]';
+    }
+    if (category.includes('중급') || category.includes('intermediate') || category.includes('응용')) {
+      return '[중급]';
+    }
+    if (category.includes('고급') || category.includes('advanced') || category.includes('전문')) {
+      return '[고급]';
+    }
+    
+    // 제목 기반 레벨 결정
+    if (title.includes('기초') || title.includes('입문') || title.includes('시작')) {
+      return '[초급]';
+    }
+    if (title.includes('활용') || title.includes('응용') || title.includes('실무')) {
+      return '[중급]';
+    }
+    if (title.includes('고급') || title.includes('전문') || title.includes('마스터')) {
+      return '[고급]';
+    }
+    
+    // 프롬프트 유형별 기본 태그
+    if (category.includes('프롬프트')) {
+      return '[초급기본 프롬프트]';
+    }
+    if (category.includes('문서') || category.includes('작성')) {
+      return '[초급]';
+    }
+    
+    // 기본값
+    return '[초급]';
+  };
+
+  const levelTag = getLevelTag(prompt); */
+
 
   if (viewMode === 'list') {
     return (
@@ -68,9 +100,16 @@ export default function PromptCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors truncate">
-                {prompt.title}
-              </h3>
+              <div className="bg-gradient-to-r from-indigo-400 to-purple-500 text-white px-3 py-2 rounded-lg mb-2 flex items-center gap-2">
+                <span className="text-white opacity-80">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <circle cx="10" cy="10" r="3"/>
+                  </svg>
+                </span>
+                <h3 className="font-medium text-sm text-white">
+                  {prompt.title}
+                </h3>
+              </div>
               <p className="text-sm text-gray-600 line-clamp-2 mt-1">
                 {prompt.description}
               </p>
@@ -157,10 +196,17 @@ export default function PromptCard({
 
       {/* Content */}
       <div className="mb-4">
-        <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
-          {prompt.title}
-        </h3>
-        <p className="text-sm text-gray-600 line-clamp-3">
+        <div className="bg-gradient-to-r from-indigo-400 to-purple-500 text-white px-4 py-3 rounded-lg mb-3 flex items-center gap-2">
+          <span className="text-white opacity-80">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <circle cx="10" cy="10" r="3"/>
+            </svg>
+          </span>
+          <h3 className="font-medium text-base text-white">
+            {prompt.title}
+          </h3>
+        </div>
+        <p className="text-sm text-gray-600 line-clamp-3 px-1">
           {prompt.description}
         </p>
       </div>

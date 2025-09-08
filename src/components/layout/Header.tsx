@@ -1,11 +1,14 @@
 'use client';
 
-import { Search, Filter, Grid3X3, List, ArrowUpDown } from 'lucide-react';
+import { Search, Filter, Grid3X3, List, ArrowUpDown, Crown, Eye, LogIn, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createCategoryOptions, DEFAULT_CATEGORY_OPTIONS } from '@/lib/constants';
 import { PromptCategory, SortBy } from '@/lib/types';
 import { RoleDisplay } from '@/components/ui/ReadOnlyBadge';
 import { useCategories } from '@/contexts/CategoryContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useState } from 'react';
+import LoginModal from '@/components/auth/LoginModal';
 
 interface HeaderProps {
   searchQuery: string;
@@ -36,6 +39,18 @@ export default function Header({
     ? createCategoryOptions(categories) 
     : DEFAULT_CATEGORY_OPTIONS;
   */
+
+  // 권한 관리
+  const { isAdmin, isLoggedIn, logout } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const handleAuthAction = () => {
+    if (isLoggedIn) {
+      logout();
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
 
   // 정렬 옵션
   const sortOptions = [
@@ -127,7 +142,48 @@ export default function Header({
             </button>
           </div>
         </div>
+
+        {/* 권한 상태 표시 - 가장 오른쪽 */}
+        <div className="hidden lg:flex items-center gap-2">
+          <div className={cn(
+            "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium",
+            isAdmin 
+              ? "bg-purple-100 text-purple-700 border border-purple-200" 
+              : "bg-gray-100 text-gray-600 border border-gray-200"
+          )}>
+            {isAdmin ? <Crown size={14} /> : <Eye size={14} />}
+            <span>{isAdmin ? '관리자' : '읽기전용'}</span>
+          </div>
+          
+          <button
+            onClick={handleAuthAction}
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+              isLoggedIn
+                ? "text-red-600 hover:bg-red-50"
+                : "text-purple-600 hover:bg-purple-50"
+            )}
+          >
+            {isLoggedIn ? (
+              <>
+                <LogOut size={16} />
+                <span className="hidden sm:inline">로그아웃</span>
+              </>
+            ) : (
+              <>
+                <LogIn size={16} />
+                <span className="hidden sm:inline">관리자</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
+      
+      {/* 로그인 모달 */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </header>
   );
 }

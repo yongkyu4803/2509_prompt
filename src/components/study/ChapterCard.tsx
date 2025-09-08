@@ -22,7 +22,7 @@ export default function ChapterCard({ chapter }: ChapterCardProps) {
               </span>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-xl leading-tight mb-1">
+              <h3 className="font-bold text-purple-600 text-xl leading-tight mb-1 group-hover:text-purple-700 transition-colors">
                 {chapter.frontmatter.title}
               </h3>
               <p className="text-sm text-gray-500">
