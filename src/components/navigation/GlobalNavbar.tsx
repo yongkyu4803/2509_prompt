@@ -16,7 +16,7 @@ const tabs: NavTab[] = [
   {
     id: 'generator',
     label: '프롬프트 생성기',
-    href: '/',
+    href: 'https://app.netlify.com/projects/gqai-genpro/overview',
     icon: Zap
   },
   {
