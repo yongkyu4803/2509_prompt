@@ -162,7 +162,7 @@ export default function PromptCard({
   return (
     <div
       onClick={onClick}
-      className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all cursor-pointer group"
+      className="bg-white rounded-xl border border-gray-200 p-3 hover:shadow-lg transition-all cursor-pointer group"
     >
       {/* CATEGORY_DISABLED: Header */}
       {/* <div className="flex items-start justify-between mb-4">
@@ -196,8 +196,8 @@ export default function PromptCard({
 
       {/* Content */}
       <div className="mb-4">
-        <div className="bg-gradient-to-r from-indigo-400 to-purple-500 text-white px-4 py-3 rounded-lg mb-3 flex items-center gap-2">
-          <span className="text-white opacity-80">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-400 text-white px-4 py-3 rounded-lg mb-3 flex items-center gap-2">
+          <span className="text-white opacity-90">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <circle cx="10" cy="10" r="3"/>
             </svg>

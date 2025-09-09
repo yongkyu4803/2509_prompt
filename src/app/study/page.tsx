@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Chapter } from '@/types/study';
 import ChapterCard from '@/components/study/ChapterCard';
 import ChapterNavigation from '@/components/study/ChapterNavigation';
-import { BookOpen, Clock } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 
 export default function StudyPage() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -63,11 +63,12 @@ export default function StudyPage() {
 
       {/* 챕터 목록 */}
       {chapters.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {chapters.map((chapter) => (
-            <ChapterCard
-              key={chapter.id}
-              chapter={chapter}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {chapters.map((chapter, idx) => (
+            <ChapterCard 
+              key={chapter.id} 
+              chapter={chapter} 
+              chapterIndex={idx}
             />
           ))}
         </div>
