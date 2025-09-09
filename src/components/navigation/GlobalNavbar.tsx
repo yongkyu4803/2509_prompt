@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { BookOpen, Sparkles, GraduationCap, ExternalLink, Mail } from 'lucide-react';
+import { BookOpen, Sparkles, GraduationCap, ExternalLink, Mail, Zap } from 'lucide-react';
 
 interface NavTab {
   id: string;
@@ -13,6 +13,12 @@ interface NavTab {
 }
 
 const tabs: NavTab[] = [
+  {
+    id: 'generator',
+    label: '프롬프트 생성기',
+    href: '/',
+    icon: Zap
+  },
   {
     id: 'library',
     label: '프롬프트 라이브러리',
