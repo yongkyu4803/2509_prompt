@@ -16,7 +16,7 @@ const tabs: NavTab[] = [
   {
     id: 'generator',
     label: '프롬프트 생성기',
-    href: 'https://gqai-genpro.vercel.app/',
+    href: 'https://genpro.gqai.kr',
     icon: Zap
   },
   {
