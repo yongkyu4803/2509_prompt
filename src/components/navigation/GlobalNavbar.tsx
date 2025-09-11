@@ -26,6 +26,12 @@ const tabs: NavTab[] = [
     icon: BookOpen
   },
   {
+    id: 'how-to-use',
+    label: '사용법 가이드',
+    href: 'https://prompt.gqai.kr/how-to-use',
+    icon: Sparkles
+  },
+  {
     id: 'study',
     label: '프롬프트 스터디',
     href: 'https://prompt.gqai.kr/study',
@@ -39,6 +45,7 @@ export default function GlobalNavbar() {
   // 현재 활성 탭 결정
   const getActiveTab = () => {
     if (pathname.startsWith('/study')) return 'study';
+    if (pathname.startsWith('/how-to-use')) return 'how-to-use';
     if (pathname.startsWith('/library')) return 'library';
     // 루트 경로는 라이브러리로 간주
     return 'library';
