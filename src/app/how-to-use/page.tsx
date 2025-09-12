@@ -9,14 +9,6 @@ import {
   Archive, 
   TrendingUp,
   ChevronRight,
-  CheckCircle,
-  Star,
-  Search,
-  Filter,
-  Copy,
-  Bookmark,
-  Settings,
-  BarChart3,
   Users,
   Lightbulb,
   Target,
@@ -51,7 +43,7 @@ const guideSections: GuideSection[] = [
           '초급/중급/고급 레벨로 난이도별 필터링',
           '최신순/인기순 정렬로 트렌드 파악'
         ],
-        example: '"보고서 작성"으로 검색 → 중급 레벨 필터 → 사용량 높은 순으로 정렬'
+        example: '"보고서 작성"으로 검색'
       },
       {
         title: '프롬프트 상세 정보 확인하기',
@@ -63,10 +55,10 @@ const guideSections: GuideSection[] = [
         ]
       },
       {
-        title: '즐겨찾기로 자주 쓰는 프롬프트 관리',
+        title: '즐겨찾기로 자주 쓰는 프롬프트 관리(즐겨찾기는 아직 지원되지 않음)',
         content: '효과가 좋았던 프롬프트를 즐겨찾기에 추가하여 빠르게 재사용할 수 있습니다.',
         tips: [
-          '테스트 후 효과적인 프롬프트만 선별하여 즐겨찾기',
+          '테스트 후 효과적인 프롬프트만 선별',
           '주제별로 즐겨찾기 정리',
           '주기적으로 즐겨찾기 목록 정리 및 업데이트'
         ]
@@ -87,7 +79,7 @@ const guideSections: GuideSection[] = [
           '업무나 프로젝트의 구체적 맥락 설명',
           '원하는 톤앤매너나 스타일 지정'
         ],
-        example: '기본: "회의록을 작성해줘" → 개선: "IT 팀 주간 회의록을 작성해줘. 참석자는 개발팀 5명, 결정사항과 액션아이템을 구분하여 정리해줘"'
+        example: '기본: "회의록을 작성해줘" → 개선: "팀 주간 회의록을 작성해줘. 참석자는 팀 전체, 결정사항과 액션아이템을 구분하여 정리해줘"'
       },
       {
         title: '출력 형식 조정하기',
@@ -103,7 +95,7 @@ const guideSections: GuideSection[] = [
         title: '변수와 플레이스홀더 활용',
         content: '반복 사용할 프롬프트는 변수를 사용하여 재사용성을 높이세요.',
         tips: [
-          '[제품명], [기간], [대상]과 같은 변수 사용',
+          '[주제별], [기간], [대상]과 같은 변수 사용',
           '상황별로 바꿔야 할 부분 미리 식별',
           '변수 설명을 별도로 정리해두기'
         ]
@@ -247,7 +239,8 @@ const guideSections: GuideSection[] = [
         tips: [
           '업무별 프롬프트 사용 순서 템플릿 만들기',
           '자주 쓰는 프롬프트들의 조합 패턴 정리',
-          '한 번에 여러 단계를 처리할 수 있는 통합 프롬프트 개발'
+          '한 번에 여러 단계를 처리할 수 있는 통합 프롬프트 개발',
+          '완성된 프롬프트는 GPT 프로젝트, Gpts와 같은 반복 작업 자동화 도구에 적용'
         ]
       },
       {
@@ -274,29 +267,25 @@ const guideSections: GuideSection[] = [
 
 export default function HowToUsePage() {
   const [activeSection, setActiveSection] = useState(guideSections[0].id);
-  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
-
-  const toggleStep = (sectionId: string, stepIndex: number) => {
-    const stepId = `${sectionId}-${stepIndex}`;
-    const newCompleted = new Set(completedSteps);
-    if (newCompleted.has(stepId)) {
-      newCompleted.delete(stepId);
-    } else {
-      newCompleted.add(stepId);
-    }
-    setCompletedSteps(newCompleted);
-  };
 
   const activeGuideSections = guideSections.find(section => section.id === activeSection);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* 헤더 섹션 */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+      <div className="text-center" style={{marginBottom: '2rem'}}>
+        <h1 
+          className="text-gray-900" 
+          style={{
+            fontSize: '2.75rem', // 110% of text-4xl (2.5rem)
+            fontWeight: '900',    // 120% heavier than bold (700)
+            lineHeight: '1.1',
+            marginBottom: '1rem'
+          }}
+        >
           GQ-AI 프롬프트 라이브러리 사용법 가이드
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto" style={{marginBottom: '1rem'}}>
           프롬프트를 효과적으로 커스터마이징하고, 반복 개선을 통해 나만의 프롬프트를 만들어 체계적으로 관리하는 방법을 익혀보세요.
         </p>
         <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
@@ -315,23 +304,6 @@ export default function HowToUsePage() {
         </div>
       </div>
 
-      {/* 진행률 표시 */}
-      <div className="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900">학습 진행률</h3>
-          <span className="text-sm text-gray-500">
-            {completedSteps.size} / {guideSections.reduce((total, section) => total + section.steps.length, 0)} 단계 완료
-          </span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-300"
-            style={{
-              width: `${(completedSteps.size / guideSections.reduce((total, section) => total + section.steps.length, 0)) * 100}%`
-            }}
-          />
-        </div>
-      </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* 사이드바 네비게이션 */}
@@ -340,12 +312,8 @@ export default function HowToUsePage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">가이드 목차</h2>
               <nav className="space-y-2">
-                {guideSections.map((section, index) => {
+                {guideSections.map((section) => {
                   const Icon = section.icon;
-                  const sectionSteps = section.steps.length;
-                  const completedInSection = section.steps.filter((_, stepIndex) => 
-                    completedSteps.has(`${section.id}-${stepIndex}`)
-                  ).length;
                   
                   return (
                     <button
@@ -365,15 +333,7 @@ export default function HowToUsePage() {
                       <div className="flex-1 min-w-0">
                         <div className="font-medium text-sm leading-5">{section.title}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          {completedInSection}/{sectionSteps} 단계 완료
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-1 mt-2">
-                          <div 
-                            className={`h-1 rounded-full transition-all duration-300 ${
-                              activeSection === section.id ? 'bg-purple-400' : 'bg-gray-400'
-                            }`}
-                            style={{ width: `${(completedInSection / sectionSteps) * 100}%` }}
-                          />
+                          {section.steps.length}개 실전 가이드
                         </div>
                       </div>
                     </button>
@@ -408,78 +368,62 @@ export default function HowToUsePage() {
               {/* 단계별 가이드 */}
               <div className="p-8">
                 <div className="space-y-8">
-                  {activeGuideSections.steps.map((step, stepIndex) => {
-                    const stepId = `${activeGuideSections.id}-${stepIndex}`;
-                    const isCompleted = completedSteps.has(stepId);
-                    
-                    return (
-                      <div key={stepIndex} className="relative">
-                        {/* 단계 번호와 연결선 */}
-                        <div className="flex items-start gap-6">
-                          <div className="flex-shrink-0 relative">
-                            <button
-                              onClick={() => toggleStep(activeGuideSections.id, stepIndex)}
-                              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
-                                isCompleted
-                                  ? 'bg-green-100 text-green-700 ring-2 ring-green-200'
-                                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                              }`}
-                            >
-                              {isCompleted ? (
-                                <CheckCircle size={18} className="text-green-600" />
-                              ) : (
-                                stepIndex + 1
-                              )}
-                            </button>
-                            {stepIndex < activeGuideSections.steps.length - 1 && (
-                              <div className="absolute top-8 left-4 w-px h-16 bg-gray-200" />
-                            )}
+                  {activeGuideSections.steps.map((step, stepIndex) => (
+                    <div key={stepIndex} className="relative">
+                      {/* 단계 번호와 연결선 */}
+                      <div className="flex items-start gap-6">
+                        <div className="flex-shrink-0 relative">
+                          <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-sm font-semibold">
+                            {stepIndex + 1}
                           </div>
+                          {stepIndex < activeGuideSections.steps.length - 1 && (
+                            <div className="absolute top-8 left-4 w-px h-16 bg-gray-200" />
+                          )}
+                        </div>
 
-                          {/* 단계 내용 */}
-                          <div className="flex-1 pb-8">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                              {step.title}
-                            </h3>
-                            <p className="text-gray-600 mb-4 leading-relaxed">
-                              {step.content}
-                            </p>
+                        {/* 단계 내용 */}
+                        <div className="flex-1 pb-8">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                            {step.title}
+                          </h3>
+                          <p className="text-gray-600 mb-4 leading-relaxed">
+                            {step.content}
+                          </p>
 
-                            {/* 팁 섹션 */}
-                            {step.tips && step.tips.length > 0 && (
-                              <div className="bg-blue-50 rounded-lg p-4 mb-4">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <Lightbulb className="text-blue-600" size={16} />
-                                  <span className="text-sm font-semibold text-blue-900">실전 팁</span>
-                                </div>
-                                <ul className="space-y-1 text-sm text-blue-800">
-                                  {step.tips.map((tip, tipIndex) => (
-                                    <li key={tipIndex} className="flex items-start gap-2">
-                                      <ChevronRight size={14} className="text-blue-600 mt-0.5 flex-shrink-0" />
-                                      <span>{tip}</span>
-                                    </li>
-                                  ))}
-                                </ul>
+                          {/* 팁 섹션 */}
+                          {step.tips && step.tips.length > 0 && (
+                            <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Lightbulb className="text-blue-600" size={16} />
+                                <span className="text-sm font-semibold text-blue-900">실전 팁</span>
                               </div>
-                            )}
+                              <ul className="space-y-1 text-sm text-blue-800">
+                                {step.tips.map((tip, tipIndex) => (
+                                  <li key={tipIndex} className="flex items-start gap-2">
+                                    <ChevronRight size={14} className="text-blue-600 mt-0.5 flex-shrink-0" />
+                                    <span>{tip}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
 
-                            {/* 예시 섹션 */}
-                            {step.example && (
-                              <div className="bg-gray-50 rounded-lg p-4">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <Target className="text-gray-600" size={16} />
-                                  <span className="text-sm font-semibold text-gray-900">실제 예시</span>
-                                </div>
-                                <p className="text-sm text-gray-700 leading-relaxed">
-                                  {step.example}
-                                </p>
+                          {/* 예시 섹션 */}
+                          {step.example && (
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Target className="text-gray-600" size={16} />
+                                <span className="text-sm font-semibold text-gray-900">실제 예시</span>
                               </div>
-                            )}
-                          </div>
+                              <p className="text-sm text-gray-700 leading-relaxed">
+                                {step.example}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

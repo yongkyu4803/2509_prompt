@@ -82,7 +82,8 @@ export default function PromptCard({
     return (
       <div
         onClick={onClick}
-        className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
+        className="flex items-center gap-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
+        style={{padding: '0.75rem'}}
       >
         {/* CATEGORY_DISABLED: Category Badge
         <div
@@ -100,13 +101,22 @@ export default function PromptCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <div className="bg-gradient-to-r from-indigo-400 to-purple-500 text-white px-3 py-2 rounded-lg mb-2 flex items-center gap-2">
+              <div 
+                className="bg-gradient-to-r from-indigo-400 to-purple-500 text-white rounded-lg mb-2 flex items-center gap-2"
+                style={{paddingLeft: '0.4rem', paddingRight: '0.4rem', paddingTop: '0.3rem', paddingBottom: '0.3rem'}}
+              >
                 <span className="text-white opacity-80">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <circle cx="10" cy="10" r="3"/>
                   </svg>
                 </span>
-                <h3 className="font-medium text-sm text-white">
+                <h3 
+                  className="text-white"
+                  style={{
+                    fontSize: '0.92rem', // 110% of text-sm (0.875rem)
+                    fontWeight: '600',    // 120% heavier than font-medium (500)
+                  }}
+                >
                   {prompt.title}
                 </h3>
               </div>
@@ -162,7 +172,8 @@ export default function PromptCard({
   return (
     <div
       onClick={onClick}
-      className="bg-white rounded-xl border border-gray-200 p-3 hover:shadow-lg transition-all cursor-pointer group"
+      className="bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all cursor-pointer group"
+      style={{padding: '0.75rem'}}
     >
       {/* CATEGORY_DISABLED: Header */}
       {/* <div className="flex items-start justify-between mb-4">
@@ -196,13 +207,22 @@ export default function PromptCard({
 
       {/* Content */}
       <div className="mb-4">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-400 text-white px-4 py-3 rounded-lg mb-3 flex items-center gap-2">
+        <div 
+          className="bg-gradient-to-r from-indigo-600 to-purple-400 text-white rounded-lg mb-3 flex items-center gap-2"
+          style={{paddingLeft: '0.6rem', paddingRight: '0.6rem', paddingTop: '0.4rem', paddingBottom: '0.4rem'}}
+        >
           <span className="text-white opacity-90">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <circle cx="10" cy="10" r="3"/>
             </svg>
           </span>
-          <h3 className="font-medium text-base text-white">
+          <h3 
+            className="text-white"
+            style={{
+              fontSize: '1.1rem', // 110% of text-base (1rem)
+              fontWeight: '600',   // 120% heavier than font-medium (500)
+            }}
+          >
             {prompt.title}
           </h3>
         </div>
