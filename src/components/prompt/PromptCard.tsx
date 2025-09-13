@@ -83,7 +83,7 @@ export default function PromptCard({
       <div
         onClick={onClick}
         className="flex items-center gap-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
-        style={{padding: '0.75rem'}}
+        style={{padding: '0.375rem'}}
       >
         {/* CATEGORY_DISABLED: Category Badge
         <div
@@ -173,7 +173,7 @@ export default function PromptCard({
     <div
       onClick={onClick}
       className="bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all cursor-pointer group"
-      style={{padding: '0.75rem'}}
+      style={{padding: '0.375rem'}}
     >
       {/* CATEGORY_DISABLED: Header */}
       {/* <div className="flex items-start justify-between mb-4">
