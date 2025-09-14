@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { X, Bell, CheckCircle, AlertTriangle, Info } from 'lucide-react';
+import noticesData from '@/data/notices.json';
 
 interface AdminNoticeModalProps {
   isOpen: boolean;
@@ -16,45 +17,7 @@ interface Notice {
   date: string;
 }
 
-const notices: Notice[] = [
-  {
-    id: '1',
-    type: 'success',
-    title: '새로운 카테고리 추가',
-    content: `📝 새 카테고리가 추가되었습니다:
-• 보도자료: 언론 보도용 콘텐츠 작성
-• 이슈분석: 현안 분석 리포트 작성  
-• 질의서작성: 공식 문서 및 질의서 작성
-
-더욱 체계적인 프롬프트 관리를 경험해보세요!`,
-    date: '2024.01.15'
-  },
-  {
-    id: '2',
-    type: 'info',
-    title: '시스템 업데이트 안내',
-    content: `🔧 시스템 개선사항:
-• 검색 성능 향상 (2배 빨라짐)
-• 프롬프트 복사 기능 개선
-• 모바일 사용성 최적화
-• 즐겨찾기 동기화 안정화
-
-업데이트된 기능들을 확인해보세요.`,
-    date: '2024.01.10'
-  },
-  {
-    id: '3',
-    type: 'warning',
-    title: '정기 점검 예정',
-    content: `⏰ 정기 시스템 점검 예정:
-• 일시: 2024년 1월 20일 (토) 02:00~04:00
-• 소요시간: 약 2시간
-• 점검내용: 서버 성능 최적화 및 보안 업데이트
-
-점검 시간 동안 서비스 이용이 제한될 수 있습니다.`,
-    date: '2024.01.08'
-  }
-];
+const notices: Notice[] = noticesData;
 
 const getNoticeIcon = (type: Notice['type']) => {
   switch (type) {
@@ -81,7 +44,10 @@ const getNoticeColorClasses = (type: Notice['type']) => {
 };
 
 export default function AdminNoticeModal({ isOpen, onClose }: AdminNoticeModalProps) {
-  // ESC 키로 모달 닫기
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  // ESC 키로 모달 닫기 및 포커스 관리
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -90,31 +56,54 @@ export default function AdminNoticeModal({ isOpen, onClose }: AdminNoticeModalPr
     };
 
     if (isOpen) {
+      // 현재 포커스된 요소 저장
+      previousFocusRef.current = document.activeElement as HTMLElement;
+
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+
+      // 모달에 포커스
+      setTimeout(() => {
+        if (modalRef.current) {
+          modalRef.current.focus();
+        }
+      }, 100);
     } else {
       document.body.style.overflow = 'unset';
+
+      // 이전 포커스된 요소로 복귀
+      if (previousFocusRef.current) {
+        previousFocusRef.current.focus();
+      }
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      // cleanup에서는 무조건 스크롤 복원
+      if (document.body.style.overflow === 'hidden') {
+        document.body.style.overflow = 'unset';
+      }
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-25 transition-opacity"
-        onClick={onClose}
-      />
-      
-      {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4 text-center">
-        <div className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+      style={{ zIndex: 99999 }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+      onClick={onClose}
+    >
+      <div
+        ref={modalRef}
+        className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
@@ -122,10 +111,10 @@ export default function AdminNoticeModal({ isOpen, onClose }: AdminNoticeModalPr
                 <Bell className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 id="modal-title" className="text-lg font-semibold text-gray-900">
                   관리자 공지사항
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p id="modal-description" className="text-sm text-gray-500">
                   최신 업데이트 및 중요 안내사항
                 </p>
               </div>
@@ -182,6 +171,5 @@ export default function AdminNoticeModal({ isOpen, onClose }: AdminNoticeModalPr
           </div>
         </div>
       </div>
-    </div>
   );
 }
